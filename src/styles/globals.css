@@ -1,10 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -50,7 +46,6 @@ code {
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
-  prefersdark: false;
   color-scheme: "light";
 
   /* Background & Base Colors */
@@ -87,7 +82,7 @@ code {
 
 @plugin "daisyui/theme" {
   name: "dark";
-  prefersdark: true;
+  default: false;
   color-scheme: "dark";
 
   /* Background & Base Colors */
@@ -121,3 +116,7 @@ code {
   --radius-field: 0.5rem;
   --radius-box: 1.5rem;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
