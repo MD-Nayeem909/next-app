@@ -1,0 +1,123 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  prefersdark: false;
+  color-scheme: "light";
+
+  /* Background & Base Colors */
+  --color-base-100: #ffffff; /* কার্ড ব্যাকগ্রাউন্ড */
+  --color-base-200: #f8fafc; /* পেজের মেইন ব্যাকগ্রাউন্ড (Soft Slate) */
+  --color-base-300: #f1f5f9; /* বর্ডার/ডিভাইডার */
+
+  /* Content (Text) Colors */
+  --color-base-content: #0f172a; /* মেইন টেক্সট (Slate-900) */
+  --color-neutral: #64748b; /* সেকেন্ডারি টেক্সট (Slate-500) */
+  --color-neutral-content: #ffffff;
+
+  /* Brand Colors */
+  --color-primary: #ff5b5b; /* আপনার পছন্দের সেই সিগনেচার রেড/স্যালমন */
+  --color-primary-content: #ffffff;
+
+  --color-secondary: #2563eb; /* ট্রাস্টের জন্য ব্লু (বাটন বা লিংকের জন্য) */
+  --color-secondary-content: #ffffff;
+
+  --color-accent: #f59e0b; /* ডেলিভারি স্ট্যাটাস বা হাইলাইটের জন্য এম্বার */
+  --color-accent-content: #ffffff;
+
+  /* Functional Colors */
+  --color-info: #0ea5e9;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  /* UI Adjustments */
+  --radius-selector: 0.75rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1.5rem; /* প্রফেশনাল রাউন্ডেড লুক */
+}
+
+@plugin "daisyui/theme" {
+  name: "dark";
+  prefersdark: true;
+  color-scheme: "dark";
+
+  /* Background & Base Colors */
+  --color-base-100: #1e293b; /* কার্ডের জন্য (Slate-800) */
+  --color-base-200: #0f172a; /* মেইন ব্যাকগ্রাউন্ড (Slate-900) */
+  --color-base-300: #334155; /* বর্ডার */
+
+  /* Content (Text) Colors */
+  --color-base-content: #f8fafc; /* মেইন টেক্সট (Slate-50) */
+  --color-neutral: #94a3b8; /* সেকেন্ডারি টেক্সট (Slate-400) */
+  --color-neutral-content: #ffffff;
+
+  /* Brand Colors */
+  --color-primary: #ff5b5b; /* ব্র্যান্ড কালার ডার্ক মোডেও এক থাকবে */
+  --color-primary-content: #ffffff;
+
+  --color-secondary: #3b82f6; /* লাইট ব্লু শেড */
+  --color-secondary-content: #ffffff;
+
+  --color-accent: #fbbf24;
+  --color-accent-content: #0f172a;
+
+  /* Functional Colors */
+  --color-info: #38bdf8;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
+
+  /* UI Adjustments */
+  --radius-selector: 0.75rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1.5rem;
+}
