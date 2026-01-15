@@ -108,14 +108,40 @@ export default function DashboardLayout({ children }) {
             )}
 
             {user.role === "agent" && (
-              <li className="mb-2">
-                <Link
-                  href="/dashboard/agent"
-                  className={isActive("/dashboard/agent")}
-                >
-                  <Package size={20} /> Assigned Deliveries
-                </Link>
-              </li>
+              <>
+                <li className="mb-2">
+                  <Link
+                    href="/dashboard/agent"
+                    className={isActive("/dashboard/agent")}
+                  >
+                    <Package size={20} /> Assigned Deliveries
+                  </Link>
+                </li>
+                <li className="mb-2">
+                  <Link
+                    href="/dashboard/agent/my-deliveries"
+                    className={isActive("/dashboard/agent/my-deliveries")}
+                  >
+                    <Package size={20} /> My Deliveries
+                  </Link>
+                </li>
+                <li className="mb-2">
+                  <Link
+                    href="/dashboard/agent/profile"
+                    className={isActive("/dashboard/agent/profile")}
+                  >
+                    <Package size={20} /> Profile
+                  </Link>
+                </li>
+                <li className="mb-2">
+                  <Link
+                    href="/dashboard/agent/history"
+                    className={isActive("/dashboard/agent/history")}
+                  >
+                    <Package size={20} /> History
+                  </Link>
+                </li>
+              </>
             )}
 
             {user.role === "admin" && (

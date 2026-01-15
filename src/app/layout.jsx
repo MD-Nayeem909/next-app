@@ -3,8 +3,9 @@ import "../styles/globals.css";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
 import ClientProvider from "../provider/ClientProvider";
-import ThemeProvider from "@/provider/ThemeProvider";
 import Script from "next/script";
+import GlobalBackground from "@/components/shared/GlobalBackground";
+import ThemeProvider from "@/provider/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,13 +33,17 @@ const RootLayout = ({ children }) => {
             <header className="sticky top-0 z-100">
               <Navbar />
             </header>
+            <GlobalBackground />
 
-            <main>{children}</main>
+            <main className="relative z-10">{children}</main>
 
             <footer>
               <Footer />
             </footer>
-            <Script src="https://upload-widget.cloudinary.com/global/all.js" strategy="beforeInteractive" />
+            <Script
+              src="https://upload-widget.cloudinary.com/global/all.js"
+              strategy="beforeInteractive"
+            />
           </ThemeProvider>
         </ClientProvider>
       </body>
