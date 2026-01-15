@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Truck, User, Mail, Lock, Briefcase, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import ImageUpload from "@/components/shared/ImageUpload";
 
 const registerSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
@@ -17,6 +19,7 @@ const registerSchema = z.object({
 
 export default function Register() {
   const router = useRouter();
+  const [photo, setPhoto] = useState("");
 
   const {
     register,
@@ -95,6 +98,13 @@ export default function Register() {
                   {errors.email.message}
                 </p>
               )}
+            </div>
+            
+            {/* Image url */}
+            <div className="form-control mb-4">
+              <label className="label font-bold">Profile Picture</label>
+              <ImageUpload onUploadSuccess={(url) => setPhoto(url)} />
+              <input type="hidden" {...register("image")} value={photo} />
             </div>
 
             {/* Password */}

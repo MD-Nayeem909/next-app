@@ -7,7 +7,7 @@ export default withAuth(
     const path = req.nextUrl.pathname;
 
     if (token && (path === "/login" || path === "/register")) {
-      return NextResponse.redirect(new URL("/dashboard", req.url));
+      return NextResponse.redirect(new URL("/", req.url));
     }
   },
   {
@@ -18,11 +18,6 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/dashboard/add-item",
-    "/dashboard/my-parcels",
-    "/login",
-    "/register"
-  ],
+ 
+  matcher: ["/dashboard/:path*"],
 };

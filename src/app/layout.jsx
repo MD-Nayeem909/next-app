@@ -4,6 +4,7 @@ import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
 import ClientProvider from "../provider/ClientProvider";
 import ThemeProvider from "@/provider/ThemeProvider";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ const RootLayout = ({ children }) => {
             <footer>
               <Footer />
             </footer>
+            <Script src="https://upload-widget.cloudinary.com/global/all.js" strategy="beforeInteractive" />
           </ThemeProvider>
         </ClientProvider>
       </body>

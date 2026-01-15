@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   LayoutDashboard,
   PackagePlus,
@@ -11,48 +10,30 @@ import {
   LogOut,
   Truck,
 } from "lucide-react";
-import { toast } from "react-hot-toast";
+import { useSession, signOut } from "next-auth/react";
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
   const pathname = usePathname();
-  const queryClient = useQueryClient();
 
-  const { data: authData, isLoading } = useQuery({
-    queryKey: ["auth"],
-    queryFn: async () => {
-      const res = await fetch("/api/auth/me");
-      return res.json();
-    },
-  });
+  const { data: session, status } = useSession();
 
-  const logoutMutation = useMutation({
-    mutationFn: async () => {
-      await fetch("/api/auth/logout", { method: "POST" });
-    },
-    onSuccess: () => {
-      queryClient.setQueryData(["auth"], null);
-      router.push("/login");
-      toast.success("Logged out");
-    },
-  });
-
-  if (isLoading) {
+  if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        Loading...
+        <span className="loading loading-spinner loading-lg text-primary"></span>
       </div>
     );
   }
 
-  if (!authData?.user) {
+  if (status === "unauthenticated") {
     router.push("/login");
     return null;
   }
 
-  const { user } = authData;
-
-  const isActive = (path) => (pathname === path ? "active" : "");
+  const { user } = session;
+  const isActive = (path) =>
+    pathname === path ? "active bg-primary text-white" : "";
 
   return (
     <div className="drawer lg:drawer-open">
@@ -90,23 +71,24 @@ export default function DashboardLayout({ children }) {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <ul className="menu p-4 w-80 min-h-full bg-base-100 text-base-content flex flex-col justify-between">
+        <ul className="menu p-4 w-80 min-h-full bg-base-100 text-base-content flex flex-col justify-between shadow-xl">
           <div>
-            <div className="mb-6 px-4 flex items-center gap-2 text-primary">
-              <Truck size={32} />
-              <span className="text-2xl font-bold">FastParcel</span>
+            <div className="mb-8 px-4 flex items-center gap-2 text-primary">
+              <Truck size={32} strokeWidth={2.5} />
+              <span className="text-2xl font-black tracking-tight">
+                FastParcel
+              </span>
             </div>
 
-            <li className="mb-1">
+            <li className="mb-2">
               <Link href="/dashboard" className={isActive("/dashboard")}>
                 <LayoutDashboard size={20} /> Dashboard
               </Link>
             </li>
 
-            {/* Customer Links */}
             {user.role === "customer" && (
               <>
-                <li className="mb-1">
+                <li className="mb-2">
                   <Link
                     href="/dashboard/customer/create"
                     className={isActive("/dashboard/customer/create")}
@@ -114,10 +96,10 @@ export default function DashboardLayout({ children }) {
                     <PackagePlus size={20} /> New Shipment
                   </Link>
                 </li>
-                <li className="mb-1">
+                <li className="mb-2">
                   <Link
-                    href="/dashboard/customer/parcels"
-                    className={isActive("/dashboard/customer/parcels")}
+                    href="/dashboard/customer/my-parcels"
+                    className={isActive("/dashboard/customer/my-parcels")}
                   >
                     <Package size={20} /> My Parcels
                   </Link>
@@ -125,24 +107,20 @@ export default function DashboardLayout({ children }) {
               </>
             )}
 
-            {/* Agent Links */}
             {user.role === "agent" && (
-              <>
-                <li className="mb-1">
-                  <Link
-                    href="/dashboard/agent"
-                    className={isActive("/dashboard/agent")}
-                  >
-                    <Package size={20} /> Assigned Deliveries
-                  </Link>
-                </li>
-              </>
+              <li className="mb-2">
+                <Link
+                  href="/dashboard/agent"
+                  className={isActive("/dashboard/agent")}
+                >
+                  <Package size={20} /> Assigned Deliveries
+                </Link>
+              </li>
             )}
 
-            {/* Admin Links */}
             {user.role === "admin" && (
               <>
-                <li className="mb-1">
+                <li className="mb-2">
                   <Link
                     href="/dashboard/admin/parcels"
                     className={isActive("/dashboard/admin/parcels")}
@@ -150,7 +128,7 @@ export default function DashboardLayout({ children }) {
                     <Package size={20} /> All Parcels
                   </Link>
                 </li>
-                <li className="mb-1">
+                <li className="mb-2">
                   <Link
                     href="/dashboard/admin/users"
                     className={isActive("/dashboard/admin/users")}
@@ -162,17 +140,19 @@ export default function DashboardLayout({ children }) {
             )}
           </div>
 
-          <div className="border-t pt-4">
-            <div className="px-4 mb-4">
-              <div className="font-bold">{user.name}</div>
-              <div className="text-xs opacity-50 capitalize">{user.role}</div>
+          <div className="border-t border-base-300 pt-6">
+            <div className="px-4 mb-6">
+              <div className="font-bold text-lg">{user.name}</div>
+              <div className="text-xs badge badge-primary badge-outline capitalize">
+                {user.role}
+              </div>
             </div>
             <li>
               <button
-                onClick={() => logoutMutation.mutate()}
-                className="text-error"
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                className="btn btn-error btn-outline btn-sm w-full flex justify-start gap-3"
               >
-                <LogOut size={20} /> Logout
+                <LogOut size={18} /> Logout
               </button>
             </li>
           </div>

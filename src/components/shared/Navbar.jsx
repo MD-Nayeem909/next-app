@@ -7,10 +7,10 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useSession, signOut } from "next-auth/react";
 import { useTheme } from "@/provider/ThemeProvider";
+import ProfileDropdown from "./ProfileDropdown";
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
-  const { data: session, status } = useSession();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -52,7 +52,16 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const { data: session, status } = useSession();
+  const user = session?.user;
+
+  if (status === "loading")
+    return (
+      <div className="w-10 h-10 rounded-full bg-base-300 animate-pulse"></div>
+    );
+
   const navLinks = [
+    { href: "/", text: "Home" },
     { href: "#work", text: "Work" },
     { href: "#about", text: "About" },
     { href: "#services", text: "Services" },
@@ -71,11 +80,8 @@ const Navbar = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 max-w-7xl">
         <div className="flex h-14 sm:h-16 lg:h-20 items-center justify-between">
           {}
-
           <Logo />
-
           {}
-
           <nav className="hidden md:flex items-center space-x-4 lg:space-x-6 xl:space-x-8">
             {navLinks.map((link) => (
               <a
@@ -89,40 +95,41 @@ const Navbar = () => {
               </a>
             ))}
           </nav>
-
           {}
 
           <div className="flex items-center space-x-4">
-            <div>
               <button
                 onClick={toggleTheme}
-                className="btn btn-ghost btn-circle btn-sm"
+                className="btn btn-ghost btn-circle btn-sm text-base-content"
               >
                 {theme === "dark" ? (
-                  <Sun size={18} className="text-warning" />
+                  <Sun size={18} />
                 ) : (
                   <Moon size={18} />
                 )}
               </button>
-            </div>
 
-            <div className="hidden md:flex items-center space-x-2 lg:space-x-3">
-              <Link
-                href="login"
-                className="flex items-center space-x-1.5 btn btn-ghost btn-md lg:space-x-2 text-xs lg:text-sm font-medium text-base-content hover:bg-primary/10 transition-all hover:shadow-md"
-              >
-                <span>Login</span>
+            {user ? (
+              <ProfileDropdown />
+            ) : (
+              <div className="hidden md:flex items-center space-x-2 lg:space-x-3">
+                <Link
+                  href="login"
+                  className="flex items-center space-x-1.5 btn btn-ghost btn-md lg:space-x-2 text-xs lg:text-sm font-medium text-base-content hover:bg-primary/10 transition-all hover:shadow-md"
+                >
+                  <span>Login</span>
 
-                <LogIn className="h-3 w-3 lg:h-4 lg:w-4" />
-              </Link>
+                  <LogIn className="h-3 w-3 lg:h-4 lg:w-4" />
+                </Link>
 
-              <Link
-                href="register"
-                className="text-xs lg:text-sm font-medium btn btn-primary btn-md transition-all shadow-sm hover:shadow-lg transform hover:scale-105"
-              >
-                Register
-              </Link>
-            </div>
+                <Link
+                  href="register"
+                  className="text-xs lg:text-sm font-medium btn btn-primary btn-md transition-all shadow-sm hover:shadow-lg transform hover:scale-105"
+                >
+                  Register
+                </Link>
+              </div>
+            )}
           </div>
 
           {}
@@ -142,6 +149,7 @@ const Navbar = () => {
 
         {}
 
+        {/* --- Responsive Mobile Menu --- */}
         <div
           className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
             isMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
