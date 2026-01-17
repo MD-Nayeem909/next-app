@@ -1,16 +1,8 @@
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+"use client";
+
 import FadeIn from "../motion/FadeIn";
 
 const Hero = () => {
-  const [trackingId, setTrackingId] = useState("");
-  const router = useRouter();
-  const handleTrack = (e) => {
-    e.preventDefault();
-    if (trackingId.trim()) {
-      router.push(`/tracking/${trackingId}`);
-    }
-  };
   return (
     <div
       className="hero min-h-150"
@@ -32,21 +24,6 @@ const Hero = () => {
               ease.
             </p>
           </FadeIn>
-
-          <div className="card bg-base-100/80 shadow-xl p-2 max-w-lg mx-auto">
-            <form onSubmit={handleTrack} className="flex gap-2">
-              <input
-                type="text"
-                placeholder="Enter Tracking ID (e.g. TRK12345)"
-                className="input input-bordered border shadow-lg focus:shadow-xl focus:outline-none border-neutral/40 focus:ring-primary bg-base-100 rounded-l-full w-full text-base-content"
-                value={trackingId}
-                onChange={(e) => setTrackingId(e.target.value)}
-              />
-              <button type="submit" className="btn btn-primary rounded-r-full">
-                Track
-              </button>
-            </form>
-          </div>
         </div>
       </div>
     </div>

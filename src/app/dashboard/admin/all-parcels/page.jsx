@@ -178,10 +178,10 @@ export default function AdminParcelsPage() {
                     <select
                       className={`select select-xs font-bold rounded-sm border-none ${
                         parcel.status === "delivered"
-                          ? "bg-success/10 text-success"
+                          ? "bg-success text-success-content"
                           : parcel.status === "pending"
-                          ? "bg-warning/10 text-warning"
-                          : "bg-info/10 text-info"
+                          ? "bg-warning text-warning-content"
+                          : "bg-info text-info-content"
                       }`}
                       value={parcel.status}
                       onChange={(e) =>

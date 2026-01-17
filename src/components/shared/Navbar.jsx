@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Sun, Moon, Menu, X, User, LogIn } from "lucide-react";
+import { Sun, Moon, Menu, X, LogIn } from "lucide-react";
 import Logo from "./Logo";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useTheme } from "@/provider/ThemeProvider";
 import ProfileDropdown from "./ProfileDropdown";
 
@@ -52,17 +52,11 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const user = session?.user;
-
-  if (status === "loading")
-    return (
-      <div className="w-10 h-10 rounded-full bg-base-300 animate-pulse"></div>
-    );
 
   const navLinks = [
     { href: "/", text: "Home" },
-    { href: "#work", text: "Work" },
     { href: "#about", text: "About" },
     { href: "#services", text: "Services" },
     { href: "/dashboard", text: "Dashboard" },
@@ -73,7 +67,7 @@ const Navbar = () => {
       initial={{ y: 0 }}
       animate={{ y: isVisible ? 0 : -100 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className={`w-full transition-all duration-300 sticky top-0 z-50 ${
+      className={`w-full transition-all duration-300 sticky top-0 z-100 ${
         isScrolled ? "bg-base-200/80 backdrop-blur-lg shadow-lg" : "bg-base-100"
       } border-b border-base-300`}
     >
@@ -98,16 +92,12 @@ const Navbar = () => {
           {}
 
           <div className="flex items-center space-x-4">
-              <button
-                onClick={toggleTheme}
-                className="btn btn-ghost btn-circle btn-sm text-base-content"
-              >
-                {theme === "dark" ? (
-                  <Sun size={18} />
-                ) : (
-                  <Moon size={18} />
-                )}
-              </button>
+            <button
+              onClick={toggleTheme}
+              className="btn btn-ghost btn-circle btn-sm text-base-content"
+            >
+              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
 
             {user ? (
               <ProfileDropdown />

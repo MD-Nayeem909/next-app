@@ -17,9 +17,6 @@ export default function DashboardPage() {
   const { data: authData, isLoading } = useQuery({ queryKey: ["auth"] });
   const user = authData?.user;
 
-  console.log(user);
-  
-
   if (isLoading)
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center">

@@ -45,7 +45,7 @@ export default function MyParcelsPage() {
   }
 
   return (
-    <div className="p-4 md:p-8">
+    <div className="">
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-2xl font-bold text-base-content">My Parcels</h1>

@@ -8,7 +8,7 @@ import { authOptions } from "../auth/[...nextauth]/route";
 export async function POST(req) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session || !session.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -25,19 +25,24 @@ export async function POST(req) {
     const parcelData = {
       trackingId: uniqueTrackingId,
       senderInfo: {
-        name: body.senderName,
-        address: body.senderAddress,
-        phone: body.senderPhone || "N/A",
+        name: body.senderInfo?.name || session.user.name,
+        email: body.senderInfo?.email || session.user.email,
+        address: body.senderInfo?.address || "Not Provided",
+        phone: body.senderInfo?.phone || "N/A",
       },
       receiverInfo: {
-        name: body.receiverName,
-        address: body.receiverAddress,
-        phone: body.receiverPhone || "N/A",
+        name: body.receiverInfo?.name,
+        address: body.receiverInfo?.address,
+        phone: body.receiverInfo?.phone || "N/A",
       },
-      description: body.description,
+      description: body.description || "No description provided",
+      weight: Number(body.parcelWeight),
       cost: body.cost,
       customerId: session.user.id,
-      statusHistory: [{ status: "pending", note: "Parcel request created" }],
+      status: "pending",
+      statusHistory: [
+        { status: "pending", note: "Parcel request created", time: new Date() },
+      ],
     };
 
     const parcel = await Parcel.create(parcelData);
@@ -58,7 +63,7 @@ export async function GET(req) {
     const session = await getServerSession(authOptions);
     if (!session)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    
+
     await dbConnect();
     let query = {};
     if (session.user.role === "customer") {

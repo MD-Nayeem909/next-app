@@ -3,23 +3,42 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Package, Truck, CheckCircle } from "lucide-react";
 import axios from "axios";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function Tracking() {
   const [trackingId, setTrackingId] = useState("");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleTrack = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.get(`/api/track/${trackingId}`);
-      setData(res.data);
+      const res = await axios.get(`/api/parcels/track/${trackingId.trim()}`);
+      if (res.data.success) {
+        setData(res.data.data);
+      } else {
+        toast.error("Parcel not found");
+        setData(null);
+      }
     } catch (err) {
-      alert("Invalid Tracking ID");
+      console.error(err);
+      toast.error(err.response?.data?.message || "Invalid Tracking ID");
       setData(null);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoToParcel = (e) => {
+    e.preventDefault();
+    const id = data.trackingId.trim();
+    if (id) {
+      router.push(`/track/${id}`);
+    } else {
+      toast.error("Please enter a valid Tracking ID");
     }
   };
 
@@ -37,8 +56,8 @@ export default function Tracking() {
         <form onSubmit={handleTrack} className="flex gap-2 mb-12">
           <input
             type="text"
-            placeholder="Enter Tracking ID (e.g., PKG-12345)"
-            className="input input-bordered w-full focus:border-primary"
+            placeholder="Enter Tracking ID (e.g., TRK-12345)"
+            className="input input-bordered w-full bg-base-200 border-base-300 focus:ring-2 focus:ring-primary/60 outline-none"
             value={trackingId}
             onChange={(e) => setTrackingId(e.target.value)}
             required
@@ -72,6 +91,14 @@ export default function Tracking() {
                   </p>
                   <h3 className="text-xl font-bold">Status: {data.status}</h3>
                 </div>
+                <div>
+                  <button
+                    onClick={handleGoToParcel}
+                    className="btn btn-primary btn-outline rounded-2xl gap-2"
+                  >
+                    View Full Details <Search size={16} />
+                  </button>
+                </div>
                 <div className="text-right">
                   <p className="text-sm opacity-70">Estimated Delivery</p>
                   <p className="font-semibold">
@@ -82,34 +109,47 @@ export default function Tracking() {
 
               {/* Progress Stepper */}
               <ul className="steps steps-vertical lg:steps-horizontal w-full">
+                {/* Ordered Step */}
                 <li
                   className={`step ${
-                    data.status === "Pending" || "step-primary"
+                    data.status !== "cancelled" ? "step-primary" : ""
                   }`}
                 >
                   Ordered
                 </li>
+
+                {/* Picked Step */}
                 <li
                   className={`step ${
-                    ["Picked", "On the way", "Delivered"].includes(data.status)
+                    ["picked", "in-transit", "delivered"].includes(
+                      data.status.toLowerCase()
+                    )
                       ? "step-primary"
                       : ""
                   }`}
                 >
                   Picked
                 </li>
+
+                {/* In Transit Step */}
                 <li
                   className={`step ${
-                    ["On the way", "Delivered"].includes(data.status)
+                    ["in-transit", "delivered"].includes(
+                      data.status.toLowerCase()
+                    )
                       ? "step-primary"
                       : ""
                   }`}
                 >
                   In Transit
                 </li>
+
+                {/* Delivered Step */}
                 <li
                   className={`step ${
-                    data.status === "Delivered" ? "step-primary" : ""
+                    data.status.toLowerCase() === "delivered"
+                      ? "step-primary"
+                      : ""
                   }`}
                 >
                   Delivered
