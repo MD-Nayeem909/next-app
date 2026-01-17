@@ -43,7 +43,7 @@ export default function AgentDashboard() {
 
   if (isLoading)
     return (
-      <div className="flex justify-center items-center min-h-[400px]">
+      <div className="flex justify-center items-center min-h-100">
         <span className="loading loading-spinner loading-lg text-primary"></span>
       </div>
     );

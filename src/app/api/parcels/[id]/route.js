@@ -97,3 +97,27 @@ export async function PUT(req, { params }) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+export async function DELETE(req, { params }) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session)
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const user = session.user;
+    await dbConnect();
+    const { id } = await params;
+    const parcel = await Parcel.findById(id);
+
+    if (!parcel) {
+      return NextResponse.json({ error: "Parcel not found" }, { status: 404 });
+    }
+    if (user.role === "admin") {
+      await parcel.deleteOne();
+      return NextResponse.json({ success: true, message: "Parcel deleted" });
+    } else {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
