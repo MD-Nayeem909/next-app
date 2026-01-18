@@ -72,7 +72,7 @@ export default function MyDeliveries() {
     );
 
   return (
-    <div className="container mx-auto max-w-5xl">
+    <div className="container mx-auto max-w-5xl animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <h1 className="text-2xl font-black flex items-center gap-2">
           <Navigation className="text-primary" /> My Deliveries

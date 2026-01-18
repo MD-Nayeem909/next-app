@@ -4,7 +4,7 @@ import ProfileDropdown from "../shared/ProfileDropdown";
 
 const DashNav = ({ user, isSidebarOpen, setSidebarOpen }) => {
   return (
-    <header className="h-20 bg-base-100/50 backdrop-blur-md border-b border-base-300 sticky top-0 z-40 px-6 flex items-center justify-between">
+    <header className="h-20 bg-base-100/50 backdrop-blur-md border-b border-base-300 sticky top-0 z-999 px-6 flex items-center justify-between">
       <button
         onClick={() => setSidebarOpen(!isSidebarOpen)}
         className="lg:hidden p-2 hover:bg-base-300 rounded-lg"

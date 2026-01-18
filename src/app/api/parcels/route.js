@@ -36,12 +36,16 @@ export async function POST(req) {
         phone: body.receiverInfo?.phone || "N/A",
       },
       description: body.description || "No description provided",
-      weight: Number(body.parcelWeight),
-      cost: body.cost,
+      weight: Number(body.weight) || 0,
+      cost: Number(body.cost) || 0,
       customerId: session.user.id,
       status: "pending",
       statusHistory: [
-        { status: "pending", note: "Parcel request created", time: new Date() },
+        {
+          status: "pending",
+          note: "Parcel request created",
+          timestamp: new Date(),
+        },
       ],
     };
 

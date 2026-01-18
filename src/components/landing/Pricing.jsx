@@ -121,34 +121,17 @@ const Pricing = () => {
     },
   };
   return (
-    <div className="min-h-screen w-full relative bg-white dark:bg-black overflow-hidden">
+    <div className="min-h-screen w-full relative overflow-hidden">
       {}
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(202, 44, 72, 0.15), transparent 70%), rgb(248 250 252)",
-        }}
-      />
-      <div
-        className="absolute inset-0 z-0 dark:block hidden"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(202, 44, 72, 0.25), transparent 70%), #000000",
-        }}
-      />
-      {}
-      <div className="absolute top-1/4 left-1/4 w-48 h-48 bg-[#CA2C48] rounded-full mix-blend-multiply filter blur-xl opacity-5 dark:opacity-10 animate-blob animation-delay-2000 pointer-events-none"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-[#CA2C48] rounded-full mix-blend-multiply filter blur-xl opacity-5 dark:opacity-10 animate-blob animation-delay-4000 pointer-events-none"></div>
-
+      
       {}
       <div className="relative z-10 font-inter py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center min-h-screen">
         <div className="max-w-7xl mx-auto w-full">
           <div className="text-center">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-base-content tracking-tight leading-tight">
               Simple, Transparent Pricing
             </h1>
-            <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            <p className="mt-4 text-lg text-neutral max-w-2xl mx-auto">
               Choose the plan that&apos;s right for you. No hidden fees, no
               surprises.
             </p>
@@ -157,7 +140,7 @@ const Pricing = () => {
           {}
           <div className="mt-10 flex justify-center">
             <div
-              className="relative flex items-center p-1 rounded-full border border-gray-300 dark:border-gray-700 dark:shadow-2xl"
+              className="relative flex items-center p-1 rounded-full border border-base-300"
               style={{
                 background: "rgba(255, 255, 255, 0.8)",
                 backdropFilter: "blur(10px)",
@@ -165,23 +148,13 @@ const Pricing = () => {
                 boxShadow: "none",
               }}
             >
-              <div
-                className="absolute inset-0 rounded-full dark:block hidden"
-                style={{
-                  background: "rgba(0, 0, 0, 0.8)",
-                  backdropFilter: "blur(10px)",
-                  WebkitBackdropFilter: "blur(10px)",
-                  boxShadow:
-                    "0 0 30px rgba(0, 0, 0, 0.8), 0 0 60px rgba(0, 0, 0, 0.6), 0 0 90px rgba(0, 0, 0, 0.4)",
-                }}
-              />
               <button
                 ref={monthlyButtonRef}
                 onClick={() => setIsMonthly(true)}
                 className={`relative z-10 py-2 px-6 rounded-full text-sm font-medium text-center transition-all duration-300 ${
                   isMonthly
-                    ? "text-white"
-                    : "text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+                    ? "text-base-content"
+                    : "text-base-300/60 hover:text-base-100"
                 }`}
               >
                 Monthly
@@ -191,12 +164,12 @@ const Pricing = () => {
                 onClick={() => setIsMonthly(false)}
                 className={`relative z-10 py-2 px-6 rounded-full text-sm font-medium text-center transition-all duration-300 flex items-center justify-center ${
                   !isMonthly
-                    ? "text-white"
-                    : "text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+                    ? "text-base-content"
+                    : "text-base-300/60 hover:text-base-100"
                 }`}
               >
                 Yearly
-                <span className="ml-2 px-2 py-0.5 bg-[#CA2C48] text-white text-xs font-bold rounded-full">
+                <span className="ml-2 px-2 py-0.5 bg-primary text-base-content text-xs font-bold rounded-full">
                   20% off
                 </span>
               </button>
@@ -236,8 +209,8 @@ const Pricing = () => {
                 key={tier.name}
                 className={`relative flex flex-col p-8 rounded-xl border transition-all duration-300 ${
                   tier.isPopular
-                    ? "border-[#CA2C48] bg-white/90 dark:bg-black/60"
-                    : "border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/60"
+                    ? "border-primary bg-base-100/60 "
+                    : "border-base-300 bg-base/80"
                 }`}
                 style={{
                   backdropFilter: "blur(10px)",
@@ -260,24 +233,24 @@ const Pricing = () => {
                 }}
               >
                 {tier.isPopular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-[#CA2C48] text-white text-xs font-semibold uppercase rounded-full shadow-md">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-primary text-base-content text-xs font-semibold uppercase rounded-full shadow-md">
                     Most Popular
                   </div>
                 )}
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+                <h3 className="text-2xl font-bold text-base-content">
                   {tier.name}
                 </h3>
                 <div className="mt-4 flex items-baseline">
-                  <span className="text-5xl font-extrabold text-gray-900 dark:text-white">
+                  <span className="text-5xl font-extrabold text-base-content">
                     <AnimatedPrice
                       price={isMonthly ? tier.monthlyPrice : tier.yearlyPrice}
                     />
                   </span>
-                  <span className="ml-1 text-xl font-medium text-gray-500 dark:text-gray-400">
+                  <span className="ml-1 text-xl font-medium text-neutral">
                     /{isMonthly ? "month" : "year"}
                   </span>
                 </div>
-                <p className="mt-4 text-gray-600 dark:text-gray-400 text-sm">
+                <p className="mt-4 text-neutral text-sm">
                   {tier.name === "Basic" &&
                     "For individuals and small teams getting started."}
                   {tier.name === "Pro" &&
@@ -290,7 +263,7 @@ const Pricing = () => {
                   {tier.features.map((feature) => (
                     <li key={feature} className="flex items-start">
                       <svg
-                        className="flex-shrink-0 h-5 w-5 text-[#CA2C48] mt-1"
+                        className="flex-shrink-0 h-5 w-5 text-primary mt-1"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -300,7 +273,7 @@ const Pricing = () => {
                       >
                         <polyline points="20 6 9 17 4 12"></polyline>
                       </svg>
-                      <p className="ml-3 text-base text-gray-700 dark:text-gray-200">
+                      <p className="ml-3 text-base text-neutral">
                         {feature}
                       </p>
                     </li>
@@ -311,8 +284,8 @@ const Pricing = () => {
                   <motion.button
                     className={`w-full py-2 px-4 rounded-md text-base font-medium shadow-sm transition-all duration-300 inline-flex items-center justify-center border ${
                       tier.isPopular
-                        ? "bg-[#CA2C48] text-white border-[#CA2C48] hover:bg-[#B02441]"
-                        : "bg-white/80 dark:bg-gray-800/80 text-[#CA2C48] border-[#CA2C48]/30 dark:border-[#CA2C48]/50 hover:bg-[#CA2C48]/10 dark:hover:bg-[#CA2C48]/20"
+                        ? "bg-primary text-base-content border-primary hover:bg-primary/80"
+                        : "bg-base-100 text-primary border-primary/30 hover:bg-primary/10"
                     }`}
                     style={{
                       backdropFilter: "blur(5px)",

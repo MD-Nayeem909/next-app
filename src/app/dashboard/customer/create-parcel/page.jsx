@@ -22,12 +22,12 @@ const parcelSchema = z.object({
   receiverPhone: z.string().min(11, "Enter a valid phone number").max(14),
   deliveryAddress: z.string().min(10, "Please provide a detailed address"),
   parcelWeight: z.preprocess(
-    (val) => parseFloat(val),
-    z.number().min(0.1, "Weight must be at least 0.1kg")
+    (val) => Number(val),
+    z
+      .number({ invalid_type_error: "Weight must be a number" })
+      .positive("Weight must be greater than 0")
+      .min(0.1, "Minimum weight is 0.1kg")
   ),
-  description: z
-    .string()
-    .min(5, "Please describe the parcel (e.g. Clothes, Gift items)"),
 });
 
 export default function CreateParcel() {
@@ -94,7 +94,7 @@ export default function CreateParcel() {
         address: data.deliveryAddress,
       },
       description: data.description,
-      parcelWeight: data.parcelWeight,
+      weight: data.parcelWeight,
       cost: cost,
       status: "pending",
       bookingDate: new Date().toISOString(),
@@ -127,7 +127,7 @@ export default function CreateParcel() {
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-base-100/50 p-8 rounded-[2.5rem] border border-base-300 shadow-sm space-y-5">
             {/* Receiver Name */}
-            <div className="form-control">
+            <div className="">
               <label className="label font-bold text-neutral mb-2">
                 Receiver&apos;s Full Name
               </label>
@@ -151,7 +151,7 @@ export default function CreateParcel() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* Receiver Phone */}
-              <div className="form-control">
+              <div className="">
                 <label className="label font-bold text-neutral mb-2">
                   Phone Number
                 </label>
@@ -174,7 +174,7 @@ export default function CreateParcel() {
               </div>
 
               {/* Parcel Weight */}
-              <div className="form-control">
+              <div className="">
                 <label className="label font-bold text-neutral mb-2">
                   Parcel Weight (kg)
                 </label>
@@ -186,9 +186,13 @@ export default function CreateParcel() {
                   <input
                     type="number"
                     step="0.1"
+                    min="0"
                     {...register("parcelWeight", { valueAsNumber: true })}
                     placeholder="e.g. 1.5"
                     className="input input-bordered w-full pl-12 rounded-2xl bg-base-100 border-none focus:ring-2 focus:ring-primary"
+                    onKeyDown={(e) =>
+                      ["-", "e", "E", "+"].includes(e.key) && e.preventDefault()
+                    }
                   />
                 </div>
                 {errors.parcelWeight && (
@@ -200,7 +204,7 @@ export default function CreateParcel() {
             </div>
 
             {/* Parcel Description */}
-            <div className="form-control">
+            <div className="">
               <label className="label font-bold text-sm">
                 Parcel Description
               </label>

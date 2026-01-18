@@ -9,9 +9,10 @@ import {
   Package,
   CheckCircle,
   Clock,
-  Truck,
   ExternalLink,
+  CalendarDays,
 } from "lucide-react";
+import Link from "next/link";
 
 export default function AgentDashboard() {
   const queryClient = useQueryClient();
@@ -48,7 +49,6 @@ export default function AgentDashboard() {
       </div>
     );
 
-  // ক্যালকুলেশন সামারি
   const pendingCount = parcels?.filter(
     (p) => p.status !== "delivered" && p.status !== "cancelled"
   ).length;
@@ -57,7 +57,7 @@ export default function AgentDashboard() {
   ).length;
 
   return (
-    <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-8">
+    <div className="max-w-6xl mx-auto space-y-7 animate-in fade-in duration-700">
       {/* Header & Stats */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -75,7 +75,9 @@ export default function AgentDashboard() {
               <Clock size={20} />
             </div>
             <div>
-              <p className="text-xs font-bold opacity-60 uppercase">Pending</p>
+              <p className="text-xs font-bold text-neutral uppercase">
+                Pending
+              </p>
               <p className="text-xl font-black">{pendingCount}</p>
             </div>
           </div>
@@ -84,7 +86,7 @@ export default function AgentDashboard() {
               <CheckCircle size={20} />
             </div>
             <div>
-              <p className="text-xs font-bold opacity-60 uppercase">
+              <p className="text-xs font-bold text-neutral uppercase">
                 Completed
               </p>
               <p className="text-xl font-black">{completedCount}</p>
@@ -100,17 +102,17 @@ export default function AgentDashboard() {
         {parcels?.map((parcel) => (
           <div
             key={parcel._id}
-            className="group bg-base-100 rounded-[2rem] border border-base-300 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
+            className="group bg-base-100/50 rounded-4xl border border-base-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
           >
             <div className="flex flex-col lg:flex-row">
               {/* Left Side: Route Info */}
               <div className="flex-1 p-6 md:p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <span className="badge badge-neutral font-mono font-bold px-4 py-3">
+                  <span className="font-mono text-primary font-bold">
                     #{parcel.trackingId}
                   </span>
-                  <span className="text-xs font-medium opacity-50 flex items-center gap-1">
-                    <Calendar size={12} />{" "}
+                  <span className="text-xs font-medium text-neutral flex items-center gap-1">
+                    <CalendarDays size={12} />{" "}
                     {parcel.createdAt
                       ? format(new Date(parcel.createdAt), "MMM d, yyyy")
                       : "N/A"}
@@ -123,7 +125,7 @@ export default function AgentDashboard() {
 
                   {/* Pickup */}
                   <div className="space-y-2">
-                    <p className="text-[10px] font-black uppercase text-primary tracking-widest">
+                    <p className="text-xs font-black uppercase text-primary tracking-widest">
                       Pickup From
                     </p>
                     <h3 className="font-bold text-lg">
@@ -143,7 +145,7 @@ export default function AgentDashboard() {
 
                   {/* Delivery */}
                   <div className="space-y-2">
-                    <p className="text-[10px] font-black uppercase text-secondary tracking-widest">
+                    <p className="text-xs font-black uppercase text-secondary tracking-widest">
                       Deliver To
                     </p>
                     <h3 className="font-bold text-lg">
@@ -164,43 +166,78 @@ export default function AgentDashboard() {
               </div>
 
               {/* Right Side: Actions & Status */}
-              <div className="bg-base-200/50 lg:w-72 p-6 md:p-8 border-t lg:border-t-0 lg:border-l border-base-300 flex flex-col justify-center gap-4">
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-black uppercase text-[10px] opacity-50">
+              <div className="bg-base-200/30 lg:w-80 p-6 border-t lg:border-t-0 lg:border-l border-base-300 flex flex-col justify-between gap-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-neutral opacity-60">
                       Update Progress
                     </span>
-                  </label>
-                  <select
-                    className={`select select-bordered font-bold w-full ${
-                      parcel.status === "delivered"
-                        ? "select-success"
-                        : "select-primary"
-                    }`}
-                    value={parcel.status}
-                    onChange={(e) =>
-                      updateStatusMutation.mutate({
-                        id: parcel._id,
-                        status: e.target.value,
-                      })
-                    }
-                    disabled={
-                      updateStatusMutation.isPending ||
-                      parcel.status === "delivered" ||
-                      parcel.status === "cancelled"
-                    }
-                  >
-                    <option value="pending">⏳ Pending</option>
-                    <option value="picked">📦 Picked Up</option>
-                    <option value="in-transit">🚚 In Transit</option>
-                    <option value="delivered">✅ Delivered</option>
-                    <option value="cancelled">❌ Cancelled</option>
-                  </select>
+                    {/* স্ট্যাটাস অনুযায়ী ছোট একটি ব্যাজ */}
+                    <div
+                      className={`badge badge-xs ${
+                        parcel.status === "delivered"
+                          ? "badge-success"
+                          : parcel.status === "cancelled"
+                          ? "badge-error"
+                          : "badge-primary"
+                      } animate-pulse`}
+                    ></div>
+                  </div>
+
+                  <div className="relative group">
+                    <select
+                      className={`select select-bordered select-md w-full font-bold rounded-2xl transition-all duration-300 ${
+                        parcel.status === "delivered"
+                          ? "bg-success/10 border-success text-success focus:ring-success"
+                          : "bg-base-100 border-base-300 focus:ring-primary"
+                      } disabled:bg-base-200 disabled:cursor-not-allowed`}
+                      value={parcel.status}
+                      onChange={(e) =>
+                        updateStatusMutation.mutate({
+                          id: parcel._id,
+                          status: e.target.value,
+                        })
+                      }
+                      disabled={
+                        updateStatusMutation.isPending ||
+                        parcel.status === "delivered" ||
+                        parcel.status === "cancelled"
+                      }
+                    >
+                      <option value="pending">⏳ Pending</option>
+                      <option value="picked">📦 Picked Up</option>
+                      <option value="in-transit">🚚 In Transit</option>
+                      <option value="delivered">✅ Delivered</option>
+                      <option value="cancelled">❌ Cancelled</option>
+                    </select>
+
+                    {updateStatusMutation.isPending && (
+                      <span className="loading loading-spinner loading-xs absolute right-10 top-4 text-primary"></span>
+                    )}
+                  </div>
+
+                  {parcel.status === "delivered" ? (
+                    <p className="text-[10px] text-success font-bold text-center italic">
+                      🎉 Shipment completed successfully
+                    </p>
+                  ) : (
+                    <p className="text-[10px] text-neutral/50 font-medium text-center">
+                      Select the current stage of this parcel
+                    </p>
+                  )}
                 </div>
 
-                <button className="btn btn-outline btn-sm gap-2 border-base-300 hover:bg-base-300 hover:text-base-content">
-                  <ExternalLink size={14} /> View Details
-                </button>
+                <div className="flex flex-col gap-2">
+                  <Link
+                    href={`/dashboard/agent/parcels/${parcel._id}`}
+                    className="btn btn-primary btn-sm rounded-xl gap-2 font-bold shadow-sm"
+                  >
+                    <ExternalLink size={14} /> View Details
+                  </Link>
+                  <button className="btn btn-ghost btn-xs text-neutral/40 hover:text-primary">
+                    Print Label
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -218,5 +255,3 @@ export default function AgentDashboard() {
     </div>
   );
 }
-
-const Calendar = ({ size }) => <Clock size={size} />;

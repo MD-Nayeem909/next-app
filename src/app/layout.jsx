@@ -6,6 +6,7 @@ import ClientProvider from "../provider/ClientProvider";
 import Script from "next/script";
 import GlobalBackground from "@/components/shared/GlobalBackground";
 import ThemeProvider from "@/provider/ThemeProvider";
+import NavbarWrapper from "@/components/shared/NavbarWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,7 @@ const RootLayout = ({ children }) => {
         >
           <ClientProvider>
             <header className="sticky top-0 z-100">
-              <Navbar />
+              <NavbarWrapper />
             </header>
             <GlobalBackground />
 
