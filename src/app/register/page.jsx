@@ -9,6 +9,8 @@ import { Truck, User, Mail, Lock, Briefcase, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import ImageUpload from "@/components/shared/ImageUpload";
+import PasswordInput from "@/components/shared/PasswordInput";
+import { Select } from "@radix-ui/react-select";
 
 const registerSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
@@ -24,6 +26,7 @@ export default function Register() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(registerSchema),
@@ -53,7 +56,7 @@ export default function Register() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="card w-full max-w-md bg-base-100 shadow-2xl"
+        className="card w-full max-w-md bg-base-100 shadow-lg"
       >
         <div className="card-body p-8">
           <h2 className="text-2xl font-black text-center mb-6">
@@ -63,34 +66,34 @@ export default function Register() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Full Name */}
             <div className="form-control">
-              <label className="label-text font-semibold mb-1">Full Name</label>
+              <p className="font-semibold mb-2 text-md">Full Name</p>
               <div className="relative">
-                <User className="absolute left-3 top-3 w-4 h-4 opacity-50" />
+                <span className="absolute left-3 inset-y-0 flex items-center text-neutral/60">
+                  <User size={18} />
+                </span>
+
                 <input
                   {...register("name")}
-                  className={`input input-bordered w-full pl-10 ${
-                    errors.name ? "input-error" : ""
-                  }`}
-                  placeholder="John Doe"
+                  placeholder="Create a strong password"
+                  className="w-full pl-10 pr-3 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-neutral focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-transparent transition-all duration-200"
                 />
               </div>
               {errors.name && (
                 <p className="text-error text-xs mt-1">{errors.name.message}</p>
               )}
             </div>
-
             {/* Email */}
             <div className="form-control">
-              <label className="label-text font-semibold mb-1">Email</label>
+              <p className="font-semibold mb-2 text-md">Email</p>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 w-4 h-4 opacity-50" />
+                <span className="absolute left-3 inset-y-0 flex items-center text-neutral/60">
+                  <Mail size={18} />
+                </span>
+
                 <input
                   {...register("email")}
-                  type="email"
-                  className={`input input-bordered w-full pl-10 ${
-                    errors.email ? "input-error" : ""
-                  }`}
-                  placeholder="john@example.com"
+                  placeholder="Create a strong password"
+                  className="w-full pl-10 pr-3 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-neutral focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-transparent transition-all duration-200"
                 />
               </div>
               {errors.email && (
@@ -99,49 +102,89 @@ export default function Register() {
                 </p>
               )}
             </div>
-            
             {/* Image url */}
             <div className="form-control mb-4">
-              <label className="label font-bold">Profile Picture</label>
+              <p className="font-semibold mb-2 text-md">Profile Picture</p>
               <ImageUpload onUploadSuccess={(url) => setPhoto(url)} />
               <input type="hidden" {...register("image")} value={photo} />
             </div>
-
             {/* Password */}
-            <div className="form-control">
-              <label className="label-text font-semibold mb-1">Password</label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 w-4 h-4 opacity-50" />
-                <input
-                  {...register("password")}
-                  type="password"
-                  className={`input input-bordered w-full pl-10 ${
-                    errors.password ? "input-error" : ""
-                  }`}
-                  placeholder="••••••••"
-                />
-              </div>
-              {errors.password && (
-                <p className="text-error text-xs mt-1">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
+            <PasswordInput register={register} />
 
             {/* Role Select */}
-            <div className="form-control">
-              <label className="label-text font-semibold mb-1">
-                I want to join as
-              </label>
-              <select
-                {...register("role")}
-                className="select select-bordered w-full"
-              >
-                <option value="customer">Customer</option>
-                <option value="agent">Delivery Agent</option>
-              </select>
-            </div>
+            <div className="form-control w-full">
+              <p className="font-semibold mb-2 text-md">I want to join as</p>
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Customer Option */}
+                <label
+                  className={`relative flex flex-col items-center p-4 border-2 rounded-2xl cursor-pointer transition-all hover:bg-base-200 ${
+                    watch("role") === "customer"
+                      ? "border-primary bg-primary/5"
+                      : "border-base-300"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    value="customer"
+                    {...register("role")}
+                    className="hidden"
+                  />
+                  <div
+                    className={`p-3 rounded-full mb-2 ${
+                      watch("role") === "customer"
+                        ? "bg-primary text-white"
+                        : "bg-base-200"
+                    }`}
+                  >
+                    <User size={24} />
+                  </div>
+                  <span className="font-bold">Customer</span>
+                  <span className="text-xs opacity-60 text-center">
+                    Send & track your parcels easily
+                  </span>
+
+                  {/* Selection Checkmark */}
+                  {watch("role") === "customer" && (
+                    <div className="absolute top-2 right-2 badge badge-primary badge-xs"></div>
+                  )}
+                </label>
+
+                {/* Delivery Agent Option */}
+                <label
+                  className={`relative flex flex-col items-center p-4 border-2 rounded-2xl cursor-pointer transition-all hover:bg-base-200 ${
+                    watch("role") === "agent"
+                      ? "border-primary bg-primary/5"
+                      : "border-base-300"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    value="agent"
+                    {...register("role")}
+                    className="hidden"
+                  />
+                  <div
+                    className={`p-3 rounded-full mb-2 ${
+                      watch("role") === "agent"
+                        ? "bg-primary text-white"
+                        : "bg-base-200"
+                    }`}
+                  >
+                    <Truck size={24} />
+                  </div>
+                  <span className="font-bold">Delivery Agent</span>
+                  <span className="text-xs opacity-60 text-center">
+                    Earn by delivering parcels
+                  </span>
+
+                  {/* Selection Checkmark */}
+                  {watch("role") === "agent" && (
+                    <div className="absolute top-2 right-2 badge badge-primary badge-xs"></div>
+                  )}
+                </label>
+              </div>
+            </div>
             <button
               type="submit"
               disabled={isSubmitting}

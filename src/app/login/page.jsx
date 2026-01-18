@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import PasswordInput from "@/components/shared/PasswordInput";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email"),
@@ -35,7 +36,7 @@ export default function Login() {
       toast.error(result.error);
     } else {
       toast.success("Login Successful!");
-      router.push("/dashboard/my-parcels");
+      router.push("/dashboard");
       router.refresh();
     }
   };
@@ -51,16 +52,18 @@ export default function Login() {
           <h2 className="text-3xl font-black text-center mb-8">Welcome Back</h2>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            {/* Email */}
             <div className="form-control">
+              <p className="font-semibold mb-2 text-md">Email</p>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 w-5 h-5 opacity-40" />
+                <span className="absolute left-3 inset-y-0 flex items-center text-neutral/60">
+                  <Mail size={18} />
+                </span>
+
                 <input
                   {...register("email")}
-                  type="email"
-                  placeholder="Email Address"
-                  className={`input input-bordered w-full pl-10 ${
-                    errors.email ? "input-error" : ""
-                  }`}
+                  placeholder="Create a strong password"
+                  className="w-full pl-10 pr-3 py-3 border border-base-300 rounded-lg bg-base-100 text-base-content placeholder-neutral focus:outline-none focus:ring-2 focus:ring-primary/60 focus:border-transparent transition-all duration-200"
                 />
               </div>
               {errors.email && (
@@ -70,24 +73,7 @@ export default function Login() {
               )}
             </div>
 
-            <div className="form-control">
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 w-5 h-5 opacity-40" />
-                <input
-                  {...register("password")}
-                  type="password"
-                  placeholder="Password"
-                  className={`input input-bordered w-full pl-10 ${
-                    errors.password ? "input-error" : ""
-                  }`}
-                />
-              </div>
-              {errors.password && (
-                <p className="text-error text-xs mt-1">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
+            <PasswordInput register={register} />
 
             <button
               type="submit"

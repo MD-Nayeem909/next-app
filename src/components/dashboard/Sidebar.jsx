@@ -8,6 +8,8 @@ import {
   History,
   LogOut,
   Truck,
+  X,
+  Menu,
 } from "lucide-react";
 import Logo from "../shared/Logo";
 
@@ -61,13 +63,19 @@ const Sidebar = ({ user, isOpen, setIsOpen }) => {
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-50 w-72 bg-base-100/50 border-r border-base-300 transform transition-transform duration-300 lg:relative lg:translate-x-0 ${
+      className={`fixed inset-y-0 left-0 z-100 w-72 bg-base-100/80 border-r border-base-300 transform transition-transform duration-300 lg:relative lg:translate-x-0 ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
       <div className="h-full flex flex-col p-6">
-        <div className="mb-10">
+        <div className="flex items-center justify-between mb-10">
           <Logo />
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="lg:hidden p-2 hover:bg-base-300 rounded-lg"
+          >
+            {isOpen && <X size={24} /> }
+          </button>
         </div>
 
         <nav className="flex-1 space-y-1">

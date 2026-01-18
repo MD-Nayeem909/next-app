@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import {
-  Camera,
   Save,
   ArrowLeft,
   User,
@@ -15,23 +14,40 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function EditProfilePage() {
   const { data: session, update } = useSession();
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const router = useRouter();
 
   const { register, handleSubmit, reset, watch } = useForm();
   const currentImageUrl = watch("image");
+
   useEffect(() => {
-    if (session?.user) {
-      reset({
-        name: session.user.name,
-        phone: session.user.phone || "",
-        address: session.user.address || "",
-        image: session.user.image || "",
-      });
-    }
+    const loadLatestData = async () => {
+      try {
+        const res = await fetch("/api/users/me");
+        const userData = await res.json();
+
+        if (res.ok) {
+          reset({
+            name: userData.name,
+            email: userData.email,
+            phone: userData.phone || "",
+            address: userData.address || "",
+            image: userData.image || "",
+          });
+        }
+      } catch (error) {
+        toast.error("Failed to load user data");
+      } finally {
+        setFetching(false);
+      }
+    };
+
+    if (session) loadLatestData();
   }, [session, reset]);
 
   const onSubmit = async (data) => {
@@ -71,37 +87,9 @@ export default function EditProfilePage() {
       setLoading(false);
     }
   };
-  const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
 
-    setUploading(true);
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const apiKey = "1e323811768692e9841c8aaa82909728";
-      const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-      if (data.success) {
-        const imageUrl = data.data.url;
-        setPreviewImage(imageUrl);
-        setValue("image", imageUrl);
-        toast.success("Image uploaded!");
-      }
-    } catch (error) {
-      toast.error("Image upload failed");
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  if (!session)
-    return <div className="text-center py-20">Loading Session...</div>;
+  if (fetching)
+    return <div className="p-10 text-center">Loading Profile Data...</div>;
 
   return (
     <div className="max-w-3xl mx-auto space-y-6 pb-10">
@@ -120,11 +108,13 @@ export default function EditProfilePage() {
         <div className="flex flex-col items-center mb-6">
           <div className="relative group w-32 h-32">
             <div className="w-full h-full rounded-[2.5rem] bg-base-100/50 overflow-hidden border-4 border-base-100 shadow-lg">
-              <img
+              <Image
                 src={
                   currentImageUrl ||
                   "https://i.ibb.co/vz6mD2V/user-placeholder.png"
                 }
+                width={128}
+                height={128}
                 className="w-full h-full object-cover"
                 alt="Preview"
                 onError={(e) => {

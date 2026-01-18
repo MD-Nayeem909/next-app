@@ -10,7 +10,7 @@ export default function ParcelDetails({ params }) {
   const { data: parcel, isLoading } = useQuery({
     queryKey: ["parcel", id],
     queryFn: async () => {
-      const { data } = await axios.get(`/api/track/${id}`);
+      const { data } = await axios.get(`/api/parcels/${id}`);
       return data;
     },
   });
@@ -55,7 +55,7 @@ export default function ParcelDetails({ params }) {
                     {new Date(history.timestamp).toLocaleString()}
                   </p>
                   <p className="text-sm mt-1 opacity-70 italic">
-                    "{history.note}"
+                    {history.note}
                   </p>
                 </div>
               </li>
