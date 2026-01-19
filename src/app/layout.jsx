@@ -35,7 +35,7 @@ const RootLayout = ({ children }) => {
             </header>
             <GlobalBackground />
 
-            <main className="relative z-10">{children}</main>
+            <main className="relative z-1">{children}</main>
 
             <footer>
               <Footer />

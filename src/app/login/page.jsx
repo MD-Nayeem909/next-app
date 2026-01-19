@@ -132,7 +132,7 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() =>
-                  handleQuickAccess("agent@fastparcel.com", "agent123")
+                  handleQuickAccess("nayeem@gmail.com", "Test@123")
                 }
                 className="flex items-center justify-center gap-2 py-3 bg-base-300 hover:bg-base-100 rounded-xl text-xs font-bold text-base-content transition-all border border-base-200"
               >

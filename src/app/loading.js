@@ -28,11 +28,11 @@ const Loading = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        className="mt-8 text-xl font-black text-slate-900 tracking-tighter italic uppercase"
+        className="mt-8 text-xl font-black text-base-content tracking-tighter italic uppercase"
       >
         SwiftParcel <span className="text-primary">Loading...</span>
       </motion.h2>
-      <p className="text-slate-400 text-sm font-medium mt-2">
+      <p className="text-neutral text-sm font-medium mt-2">
         Preparing your experience
       </p>
     </div>

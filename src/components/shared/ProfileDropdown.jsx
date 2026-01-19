@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { LayoutDashboard, User, Settings, LogOut } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
 
 // --- Sub-Components ---
 
@@ -55,14 +56,28 @@ const DropdownMenuSeparator = () => <div className="my-2 h-px bg-base-300" />;
 
 export default function ProfileDropdown() {
   const { data: session, status } = useSession();
-  const user = session?.user;
+  const { data: dbUser, isLoading } = useQuery({
+    queryKey: ["user-profile", session?.user?.email],
+    queryFn: async () => {
+      const res = await fetch("/api/users/me");
+      if (!res.ok) throw new Error("Failed to fetch");
+      return res.json();
+    },
+    enabled: !!session?.user?.email,
+  });
+
+  const displayImage =
+    dbUser?.image ||
+    session?.user?.image ||
+    "https://ui-avatars.com/api/?name=User";
+  const displayName = dbUser?.name || session?.user?.name || "User";
 
   if (status === "loading")
     return (
       <div className="w-10 h-10 rounded-full bg-base-300 animate-pulse"></div>
     );
 
-  if (!user) return null;
+  if (!session) return null;
 
   return (
     <div className="flex items-center justify-center">
@@ -73,8 +88,8 @@ export default function ProfileDropdown() {
               <div className="ring-primary ring-offset-base-100 w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full ring ring-offset-2">
                 <img
                   src={
-                    user?.image ||
-                    `https://ui-avatars.com/api/?name=${user?.name}`
+                    displayImage ||
+                    `https://ui-avatars.com/api/?name=${displayName}`
                   }
                   alt="profile"
                 />
@@ -89,8 +104,8 @@ export default function ProfileDropdown() {
             <div className="w-10 rounded-full">
               <img
                 src={
-                  user?.image ||
-                  `https://ui-avatars.com/api/?name=${user?.name}`
+                  displayImage ||
+                  `https://ui-avatars.com/api/?name=${displayName}`
                 }
                 alt="profile"
               />
@@ -98,14 +113,14 @@ export default function ProfileDropdown() {
           </div>
           <div className="max-w-45">
             <p className="text-sm font-bold text-base-content truncate uppercase">
-              {user?.name || "Guest User"}
+              {dbUser?.name || "Guest User"}
             </p>
             <p className="text-xs text-base-content/60 truncate">
-              {user?.email}
+              {dbUser?.email}
             </p>
-            {user?.role && (
+            {dbUser?.role && (
               <span className="inline-block mt-2 text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-bold uppercase">
-                {user.role}
+                {dbUser.role}
               </span>
             )}
           </div>

@@ -20,9 +20,9 @@ const Navbar = () => {
   useEffect(() => {
     const controlNavbar = () => {
       const currentScrollY = window.scrollY;
+      if (isMenuOpen) return;
       if (currentScrollY > lastScrollY && currentScrollY > 200) {
         setIsVisible(false);
-        setIsMenuOpen(false);
       } else {
         setIsVisible(true);
       }
@@ -30,7 +30,7 @@ const Navbar = () => {
     };
     window.addEventListener("scroll", controlNavbar);
     return () => window.removeEventListener("scroll", controlNavbar);
-  }, [lastScrollY]);
+  }, [lastScrollY, isMenuOpen]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,6 +52,10 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = isMenuOpen ? "hidden" : "auto";
+  }, [isMenuOpen]);
+
   const { data: session } = useSession();
   const user = session?.user;
 
@@ -67,12 +71,13 @@ const Navbar = () => {
   return (
     <motion.header
       initial={{ y: 0 }}
-      animate={{ y: isVisible ? 0 : -100 }}
+      animate={{ y: isVisible || isMenuOpen ? 0 : -100 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
       className={`w-full transition-all duration-300 sticky top-0 z-100 ${
         isScrolled ? "bg-base-200/80 backdrop-blur-lg shadow-lg" : "bg-base-100"
       } border-b border-base-300`}
     >
+      
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 max-w-7xl">
         <div className="flex h-14 sm:h-16 lg:h-20 items-center justify-between">
           {}
@@ -80,7 +85,7 @@ const Navbar = () => {
           {}
           <nav className="hidden md:flex items-center space-x-4 lg:space-x-6 xl:space-x-8">
             {visibleLinks.map((link) => (
-              <a
+              <Link
                 key={link.text}
                 href={link.href}
                 className="text-sm lg:text-base font-medium text-neutral hover:text-primary transition-colors relative group"
@@ -88,7 +93,7 @@ const Navbar = () => {
                 {link.text}
 
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
-              </a>
+              </Link>
             ))}
           </nav>
           {}
@@ -139,11 +144,9 @@ const Navbar = () => {
           </button>
         </div>
 
-        {}
-
         {/* --- Responsive Mobile Menu --- */}
         <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+          className={`md:hidden z-50 overflow-hidden transition-all duration-300 ease-in-out ${
             isMenuOpen ? "max-h-125 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
@@ -196,7 +199,9 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+      
     </motion.header>
+    
   );
 };
 
