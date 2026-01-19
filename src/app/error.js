@@ -14,9 +14,9 @@ const Error = ({ error, reset }) => {
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="max-w-md w-full bg-base-100 p-10 rounded-[3rem] shadow-2xl shadow-slate-200 text-center border border-slate-100"
+        className="max-w-md w-full bg-base-100/50 p-10 rounded-[3rem] shadow-2xl shadow-base-100 text-center border border-base-100"
       >
-        <div className="w-20 h-20 bg-rose-50 text-rose-500 rounded-3xl flex items-center justify-center mx-auto mb-6">
+        <div className="w-20 h-20 bg-rose-50 text-primary rounded-3xl flex items-center justify-center mx-auto mb-6">
           <AlertCircle size={40} />
         </div>
 
@@ -45,7 +45,7 @@ const Error = ({ error, reset }) => {
         </div>
       </motion.div>
 
-      <p className="mt-8 text-slate-300 text-xs font-mono uppercase tracking-widest">
+      <p className="mt-8 text-neutral text-sm font-mono uppercase tracking-widest">
         Error Code: {error.digest || "INTERNAL_SERVER_ERROR"}
       </p>
     </div>

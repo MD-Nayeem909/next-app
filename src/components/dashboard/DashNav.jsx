@@ -1,5 +1,5 @@
 import React from "react";
-import { Bell, LogIn, Menu, Moon, Sun, User, X } from "lucide-react";
+import { Bell, Menu, Moon, Sun, X } from "lucide-react";
 import ProfileDropdown from "../shared/ProfileDropdown";
 import { useTheme } from "@/provider/ThemeProvider";
 

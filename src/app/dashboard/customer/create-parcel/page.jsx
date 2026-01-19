@@ -133,13 +133,13 @@ export default function CreateParcel() {
               </label>
               <div className="relative">
                 <User
-                  className="absolute left-4 top-4 text-neutral"
+                  className="absolute left-4 z-10 top-3 text-neutral"
                   size={20}
                 />
                 <input
                   {...register("receiverName")}
                   placeholder="Enter full name"
-                  className="input input-bordered w-full pl-12 rounded-2xl bg-base-100 border-none focus:ring-2 focus:ring-primary"
+                  className="input input-bordered w-full pl-12 rounded-2xl bg-base-100 border-none outline-none focus:ring-2 focus:ring-primary/50"
                 />
               </div>
               {errors.receiverName && (
@@ -157,13 +157,13 @@ export default function CreateParcel() {
                 </label>
                 <div className="relative">
                   <Phone
-                    className="absolute left-4 top-4 text-neutral"
+                    className="absolute z-10 left-4 top-3 text-neutral"
                     size={20}
                   />
                   <input
                     {...register("receiverPhone")}
                     placeholder="01XXXXXXXXX"
-                    className="input input-bordered w-full pl-12 rounded-2xl bg-base-100 border-none focus:ring-2 focus:ring-primary"
+                    className="input input-bordered w-full pl-12 rounded-2xl bg-base-100 border-none outline-none focus:ring-2 focus:ring-primary/50"
                   />
                 </div>
                 {errors.receiverPhone && (
@@ -180,7 +180,7 @@ export default function CreateParcel() {
                 </label>
                 <div className="relative">
                   <Weight
-                    className="absolute left-4 top-4 text-neutral"
+                    className="absolute z-10 left-4 top-3 text-neutral"
                     size={20}
                   />
                   <input
@@ -189,7 +189,7 @@ export default function CreateParcel() {
                     min="0"
                     {...register("parcelWeight", { valueAsNumber: true })}
                     placeholder="e.g. 1.5"
-                    className="input input-bordered w-full pl-12 rounded-2xl bg-base-100 border-none focus:ring-2 focus:ring-primary"
+                    className="input input-bordered w-full pl-12 rounded-2xl bg-base-100 border-none outline-none focus:ring-2 focus:ring-primary/50"
                     onKeyDown={(e) =>
                       ["-", "e", "E", "+"].includes(e.key) && e.preventDefault()
                     }
@@ -210,12 +210,12 @@ export default function CreateParcel() {
               </label>
               <div className="relative">
                 <Package
-                  className="absolute left-4 top-4 text-neutral/40"
+                  className="absolute left-4 top-4 text-neutral"
                   size={18}
                 />
                 <textarea
                   {...register("description")}
-                  className={`textarea textarea-bordered w-full pl-12 pt-4 rounded-2xl bg-base-200/30 border-none focus:ring-2 focus:ring-primary min-h-20 ${
+                  className={`textarea textarea-bordered w-full pl-12 pt-4 rounded-2xl bg-base-200/30 outline-none border-none focus:ring-2 focus:ring-primary min-h-20 ${
                     errors.description ? "ring-2 ring-error" : ""
                   }`}
                   placeholder="What's inside? (e.g. Laptop, Books, Glassware...)"
@@ -235,12 +235,12 @@ export default function CreateParcel() {
               </label>
               <div className="relative">
                 <MapPin
-                  className="absolute left-4 top-4 text-neutral"
+                  className="absolute left-4 z-10 top-4 text-neutral"
                   size={20}
                 />
                 <textarea
                   {...register("deliveryAddress")}
-                  className="textarea textarea-bordered w-full pl-12 pt-4 rounded-2xl bg-base-100 border-none focus:ring-2 focus:ring-primary min-h-30"
+                  className="textarea textarea-bordered w-full pl-12 pt-4 rounded-2xl bg-base-100 border-none focus:ring-2 focus:ring-primary min-h-30 outline-none"
                   placeholder="Full street address, City, Area..."
                 ></textarea>
               </div>

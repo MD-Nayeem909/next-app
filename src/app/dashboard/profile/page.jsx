@@ -11,7 +11,6 @@ import {
   Package,
   Calendar,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 export default function ProfilePage() {
@@ -35,13 +34,11 @@ export default function ProfilePage() {
               <div className="w-32 h-32 rounded-[2.5rem] bg-base-100 p-2 shadow-xl relative group">
                 <div className="w-full h-full rounded-4xl bg-base-200 overflow-hidden flex items-center justify-center">
                   {user?.image ? (
-                    <Image
+                    <img
                       src={
                         user?.image ||
                         "https://i.ibb.co/vz6mD2V/user-placeholder.png"
                       }
-                      width={128}
-                      height={128}
                       className="w-full h-full object-cover"
                       alt="Profile"
                       onError={(e) => {
@@ -53,9 +50,9 @@ export default function ProfilePage() {
                     <User size={50} className="text-neutral" />
                   )}
                 </div>
-              <button className="absolute right-0 bottom-0 p-2 bg-primary text-white rounded-xl shadow-lg hover:scale-110 transition-transform">
-                <Camera size={16} />
-              </button>
+                <button className="absolute right-0 bottom-0 p-2 bg-primary text-white rounded-xl shadow-lg hover:scale-110 transition-transform">
+                  <Camera size={16} />
+                </button>
               </div>
             </div>
             <div className="mb-2">

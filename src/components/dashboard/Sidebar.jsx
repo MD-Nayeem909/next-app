@@ -55,6 +55,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         icon: LayoutDashboard,
       },
       {
+        name: "Purchased Items",
+        href: "/dashboard/customer/my-products",
+        icon: ShoppingBag,
+      },
+      {
         name: "Create Parcel",
         href: "/dashboard/customer/create-parcel",
         icon: Package,

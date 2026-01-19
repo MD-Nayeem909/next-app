@@ -60,7 +60,7 @@ export default function CustomerOverview() {
           </p>
         </div>
         <Link
-          href="/dashboard/customer/create"
+          href="/dashboard/customer/create-parcel"
           className="btn btn-primary btn-lg rounded-3xl px-8 shadow-xl shadow-primary/20 gap-3 group"
         >
           <Plus size={24} />
