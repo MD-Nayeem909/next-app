@@ -8,6 +8,8 @@ import Testimonials from "@/components/landing/Testimonials";
 import Tracking from "@/components/landing/Tracking";
 import NewsletterSection from "@/components/landing/Newsletter";
 import FeaturedProducts from "@/components/landing/FeaturedProducts";
+import FAQ from "@/components/landing/FAQ";
+import AboutUs from "@/components/landing/AboutUs";
 
 export default function Home() {
   return (
@@ -15,12 +17,14 @@ export default function Home() {
       <Hero />
       <div className="space-y-30 px-4 pb-30">
         <Tracking />
+        <AboutUs />
         <Services />
         <FeaturedProducts />
         <Features />
         <NewsletterSection />
         <Pricing />
         <Testimonials />
+        <FAQ />
       </div>
     </div>
   );

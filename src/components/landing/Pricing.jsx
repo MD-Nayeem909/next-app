@@ -128,7 +128,7 @@ const Pricing = () => {
     },
   };
   return (
-    <div className="w-full relative overflow-hidden">
+    <section id="pricing" className="w-full relative overflow-hidden">
       {}
       <div className="relative z-10 font-inter flex items-center justify-center">
         <div className="max-w-7xl mx-auto w-full">
@@ -307,7 +307,7 @@ const Pricing = () => {
           </motion.div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 export default Pricing;

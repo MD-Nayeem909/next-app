@@ -6,6 +6,7 @@ import Script from "next/script";
 import GlobalBackground from "@/components/shared/GlobalBackground";
 import ThemeProvider from "@/provider/ThemeProvider";
 import NavbarWrapper from "@/components/shared/NavbarWrapper";
+import BackToTop from "@/components/shared/BackToTop";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +37,7 @@ const RootLayout = ({ children }) => {
             <GlobalBackground />
 
             <main className="relative z-1">{children}</main>
+            <BackToTop />
 
             <footer>
               <Footer />

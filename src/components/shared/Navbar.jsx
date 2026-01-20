@@ -8,9 +8,12 @@ import { motion } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "@/provider/ThemeProvider";
 import ProfileDropdown from "./ProfileDropdown";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
+  const pathname = usePathname();
+  const isActive = (path) => pathname === path;
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -77,7 +80,6 @@ const Navbar = () => {
         isScrolled ? "bg-base-200/80 backdrop-blur-lg shadow-lg" : "bg-base-100"
       } border-b border-base-300`}
     >
-      
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 max-w-7xl">
         <div className="flex h-14 sm:h-16 lg:h-20 items-center justify-between">
           {}
@@ -88,11 +90,19 @@ const Navbar = () => {
               <Link
                 key={link.text}
                 href={link.href}
-                className="text-sm lg:text-base font-medium text-neutral hover:text-primary transition-colors relative group"
+                className={`text-sm lg:text-base font-medium transition-colors relative group ${
+                  isActive(link.href)
+                    ? "text-primary"
+                    : "text-neutral hover:text-primary"
+                }`}
               >
                 {link.text}
 
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                <span
+                  className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${
+                    isActive(link.href) ? "w-full" : "w-0 group-hover:w-full"
+                  }`}
+                ></span>
               </Link>
             ))}
           </nav>
@@ -158,7 +168,11 @@ const Navbar = () => {
                   key={link.text}
                   href={link.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="py-3 px-2 text-base font-bold text-neutral rounded-sm hover:bg-primary/5 hover:text-primary transition-colors"
+                  className={`py-3 px-4 text-base font-bold rounded-xl transition-colors block ${
+                    isActive(link.href)
+                      ? "bg-primary/10 text-primary"
+                      : "text-neutral hover:bg-primary/5 hover:text-primary"
+                  }`}
                 >
                   {link.text}
                 </Link>
@@ -199,9 +213,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      
     </motion.header>
-    
   );
 };
 

@@ -12,8 +12,12 @@ import {
   ShieldCheck,
   Settings,
 } from "lucide-react";
+import { useSession } from "next-auth/react";
+import AnalyticsChart from "@/components/dashboard/AnalyticsChart";
 
 export default function DashboardPage() {
+  const { data: session } = useSession();
+
   const { data: authData, isLoading } = useQuery({
     queryKey: ["auth"],
     queryFn: async () => {
@@ -23,6 +27,21 @@ export default function DashboardPage() {
     },
   });
   const user = authData?.user;
+  const role = session?.user?.role;
+
+  const customerData = [
+    { name: "Mon", amount: 40 },
+    { name: "Tue", amount: 100 },
+    { name: "Wed", amount: 80 },
+    // ...
+  ];
+
+  const adminData = [
+    { name: "Mon", amount: 1200 },
+    { name: "Tue", amount: 2500 },
+    { name: "Wed", amount: 1800 },
+    // ...
+  ];
 
   if (isLoading)
     return (
@@ -86,7 +105,7 @@ export default function DashboardPage() {
               </p>
               <div className="card-actions mt-4">
                 <Link
-                  href="/dashboard/customer/create"
+                  href="/dashboard/customer/create-parcel"
                   className="btn btn-primary rounded-xl w-full group"
                 >
                   Create Parcel{" "}
@@ -174,6 +193,22 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="">
+        {role === "admin" ? (
+          <AnalyticsChart
+            data={adminData}
+            title="Total Revenue Overview (Admin)"
+            color="#f87171"
+          />
+        ) : (
+          <AnalyticsChart
+            data={customerData}
+            title="Your Spending Analysis (Customer)"
+            color="#570df8"
+          />
+        )}
       </div>
 
       {/* Decorative Tips */}

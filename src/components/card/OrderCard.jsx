@@ -15,7 +15,7 @@ const OrderCard = ({ order }) => {
         <img
           src={order.productId?.image || "/placeholder.jpg"}
           alt={order.productId?.title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 rounded-2xl"
         />
       </figure>
       <div className="card-body p-6">
@@ -23,7 +23,7 @@ const OrderCard = ({ order }) => {
           <h3 className="card-title font-black text-lg">
             {order.productId?.title}
           </h3>
-          <div className="badge badge-success badge-outline font-bold text-[10px]">
+          <div className="badge badge-success badge-outline font-bold text-xs">
             {order.status}
           </div>
         </div>

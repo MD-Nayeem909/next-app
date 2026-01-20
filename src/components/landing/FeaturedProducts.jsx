@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ProductCard from "./ProductCard";
+import ProductCard from "../card/ProductCard";
 import Link from "next/link";
 import ProductSkeleton from "../ui/ProductSkeleton";
 import Loading from "@/app/loading";
