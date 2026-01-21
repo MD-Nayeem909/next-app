@@ -86,7 +86,7 @@ Ensure you have **Node.js 18+** installed.
 ### 1. Clone & Install
 
 ```bash
-git clone [https://github.com/your-username/fast-parcel.git](https://github.com/your-username/fast-parcel.git)
+git clone https://github.com/MD-Nayeem909/fast-parcel.git
 cd fast-parcel
 npm install
 ```
