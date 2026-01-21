@@ -43,7 +43,7 @@ export default function AgentParcelDetails() {
       {/* Top Navigation */}
       <div className="flex items-center gap-4">
         <Link
-          href="/dashboard/agent/my-parcels"
+          href="/dashboard/agent/tasks"
           className="btn btn-ghost btn-sm rounded-xl"
         >
           <ArrowLeft size={18} /> Back to List

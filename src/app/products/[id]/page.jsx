@@ -14,6 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import Button from "@/components/ui/Button";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -183,9 +184,11 @@ const ProductDetails = () => {
                 <button className="btn btn-primary btn-lg flex-1 rounded-2xl font-bold shadow-xl shadow-primary/25 gap-2">
                   <Download size={20} /> Download Invoice
                 </button>
-                <button className="btn btn-outline btn-lg flex-1 rounded-2xl font-bold border-2 border-base-100 hover:bg-base-300">
+                <Link 
+                href={"/contact"}
+                className="btn btn-outline btn-lg flex-1 rounded-2xl font-bold border-2 border-base-100 hover:bg-base-300">
                   Contact Support
-                </button>
+                </Link>
               </div>
             ) : (
               <div className="flex flex-col sm:flex-row gap-4">

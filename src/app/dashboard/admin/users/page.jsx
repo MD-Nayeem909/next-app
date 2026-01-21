@@ -69,8 +69,8 @@ export default function UsersPage() {
                 <td className="pl-8 py-4">
                   <div className="flex items-center gap-3">
                     <div className="avatar placeholder">
-                      <div className="bg-neutral text-neutral-content rounded-xl w-10">
-                        <span>{user.name[0]}</span>
+                      <div className="bg-primary text-neutral-content rounded-xl w-10 flex justify-center items-center">
+                        <span className="font-bold">{user.name[0]}</span>
                       </div>
                     </div>
                     <div>
@@ -102,7 +102,7 @@ export default function UsersPage() {
                 </td>
                 <td className="pr-8 text-right">
                   <select
-                    className="select select-bordered select-xs rounded-lg"
+                    className="select select-xs rounded-lg border border-neutral/50 focus:ring-2 ring-primary/50 outline-none"
                     value={user.role}
                     onChange={(e) =>
                       updateRoleMutation.mutate({

@@ -1,6 +1,7 @@
 "use client";
 
 import Loading from "@/app/loading";
+import AnalyticsChart from "@/components/dashboard/AnalyticsChart";
 import { useQuery } from "@tanstack/react-query";
 import {
   Package,
@@ -21,6 +22,26 @@ export default function AdminOverview() {
       return result.data || [];
     },
   });
+
+  const chartData = (data) => {
+    if (!data) return [];
+    const chartMap = {};
+
+    data.forEach((parcel) => {
+      const date = new Date(parcel.createdAt).toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "short",
+      });
+      chartMap[date] = (chartMap[date] || 0) + (parcel.cost || 0);
+    });
+
+    return Object.keys(chartMap)
+      .map((date) => ({
+        name: date,
+        amount: chartMap[date],
+      }))
+      .slice(-7);
+  };
 
   const totalParcels = parcels?.length || 0;
   const pendingParcels =
@@ -104,6 +125,14 @@ export default function AdminOverview() {
         ))}
       </div>
 
+      <div className="w-full">
+        <AnalyticsChart
+          data={chartData(parcels)}
+          title="Platform Revenue Flow"
+          color="#f87171"
+        />
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Activity / Simple List */}
         <div className="lg:col-span-2 bg-base-100 rounded-[2.5rem] border border-base-300 p-8">
@@ -116,15 +145,15 @@ export default function AdminOverview() {
             </Link>
           </div>
           <div className="space-y-4">
-            {parcels?.slice(0, 5).map((parcel) => (
+            {parcels?.slice(0, 4).map((parcel) => (
               <div
                 key={parcel._id}
                 className="flex items-center justify-between p-4 bg-base-200/50 rounded-2xl"
               >
                 <div className="flex items-center gap-4">
                   <div className="avatar placeholder">
-                    <div className="bg-neutral text-neutral-content rounded-full w-10">
-                      <span className="text-xs">
+                    <div className="bg-primary text-neutral-content rounded-full w-10 flex justify-center items-center">
+                      <span className="text-xs font-bold">
                         {parcel.trackingId.slice(-2)}
                       </span>
                     </div>

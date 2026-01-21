@@ -17,31 +17,35 @@ import AnalyticsChart from "@/components/dashboard/AnalyticsChart";
 
 export default function DashboardPage() {
   const { data: session } = useSession();
-
-  const { data: authData, isLoading } = useQuery({
-    queryKey: ["auth"],
-    queryFn: async () => {
-      const res = await fetch("/api/auth/session");
-      if (!res.ok) throw new Error("Failed to fetch session");
-      return res.json();
-    },
-  });
-  const user = authData?.user;
   const role = session?.user?.role;
 
-  const customerData = [
-    { name: "Mon", amount: 40 },
-    { name: "Tue", amount: 100 },
-    { name: "Wed", amount: 80 },
-    // ...
-  ];
+  const { data: rawData, isLoading } = useQuery({
+    queryKey: ["dashboard-stats", role],
+    queryFn: async () => {
+      const res = await fetch("/api/parcels");
+      const result = await res.json();
+      return result.data || [];
+    },
+    enabled: !!role,
+  });
 
-  const adminData = [
-    { name: "Mon", amount: 1200 },
-    { name: "Tue", amount: 2500 },
-    { name: "Wed", amount: 1800 },
-    // ...
-  ];
+  const prepareData = (items) => {
+    if (!items) return [];
+    const chartMap = {};
+    items.forEach((item) => {
+      const date = new Date(item.createdAt).toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "short",
+      });
+      if (!chartMap[date]) chartMap[date] = { name: date, amount: 0, count: 0 };
+
+      chartMap[date].amount += item.price || item.cost || 0;
+      chartMap[date].count += 1;
+    });
+    return Object.values(chartMap).reverse();
+  };
+
+  const dashboardData = prepareData(rawData);
 
   if (isLoading)
     return (
@@ -53,7 +57,7 @@ export default function DashboardPage() {
       </div>
     );
 
-  if (!user) return null;
+  if (!session?.user) return null;
 
   return (
     <div className="space-y-10">
@@ -62,7 +66,7 @@ export default function DashboardPage() {
         <div>
           <h1 className="text-4xl font-black tracking-tight flex items-center gap-3">
             <LayoutDashboard className="text-primary" size={32} />
-            Welcome back, {user.name.split(" ")[0]}!
+            Welcome back, {session.user.name.split(" ")[0]}!
           </h1>
           <p className="text-neutral mt-1">
             Here&apos;s what&apos;s happening with your account today.
@@ -70,7 +74,7 @@ export default function DashboardPage() {
         </div>
         <div className="badge badge-primary badge-outline py-4 px-6 rounded-full font-bold gap-2">
           <ShieldCheck size={16} />
-          Account Role: <span className="capitalize">{user.role}</span>
+          Account Role: <span className="capitalize">{role}</span>
         </div>
       </div>
 
@@ -83,7 +87,7 @@ export default function DashboardPage() {
             <p className="text-sm font-medium opacity-70 uppercase tracking-widest">
               Active Identity
             </p>
-            <h2 className="text-3xl font-black capitalize">{user.role}</h2>
+            <h2 className="text-3xl font-black capitalize">{role}</h2>
           </div>
           <div className="absolute -right-8 -bottom-8 opacity-10 group-hover:scale-110 transition-transform duration-500 text-white">
             <UserCircle size={150} />
@@ -93,7 +97,7 @@ export default function DashboardPage() {
         {/* --- Role Based Cards --- */}
 
         {/* 1. Customer Card */}
-        {user.role === "customer" && (
+        {role === "customer" && (
           <div className="card bg-base-100 rounded-4xl shadow-sm border border-base-300 hover:border-primary/50 transition-colors overflow-hidden font-sans">
             <div className="card-body p-8">
               <div className="bg-primary/10 w-12 h-12 rounded-2xl flex items-center justify-center text-primary mb-2">
@@ -120,7 +124,7 @@ export default function DashboardPage() {
         )}
 
         {/* 2. Agent Card */}
-        {user.role === "agent" && (
+        {role === "agent" && (
           <div className="card bg-base-100 rounded-4xl shadow-sm border border-base-300 hover:border-primary/50 transition-colors overflow-hidden font-sans">
             <div className="card-body p-8">
               <div className="bg-primary/10 w-12 h-12 rounded-2xl flex items-center justify-center text-primary mb-2">
@@ -146,7 +150,7 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {user.role === "admin" && (
+        {role === "admin" && (
           <div className="card bg-base-100 rounded-4xl shadow-sm border border-base-300 hover:border-primary/50 transition-colors overflow-hidden font-sans">
             <div className="card-body p-8">
               <div className="bg-primary/10 w-12 h-12 rounded-2xl flex items-center justify-center text-primary mb-2">
@@ -172,6 +176,7 @@ export default function DashboardPage() {
           </div>
         )}
 
+        {/* History Card */}
         <div className="card bg-base-100 rounded-4xl shadow-sm border border-base-300 font-sans">
           <div className="card-body p-8">
             <div className="bg-success/10 w-12 h-12 rounded-2xl flex items-center justify-center text-success mb-2">
@@ -182,11 +187,11 @@ export default function DashboardPage() {
             <div className="card-actions mt-4">
               <Link
                 href={
-                  user.role === "admin"
+                  role === "admin"
                     ? "/dashboard/admin/all-parcels"
                     : "/dashboard/my-parcels"
                 }
-                className="btn btn-ghost btn-outline border-base-300 rounded-xl w-full"
+                className="btn btn-ghost btn-outline border-base-300 rounded-xl w-full mt-4"
               >
                 View History
               </Link>
@@ -195,17 +200,23 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="">
+      <div className="w-full">
         {role === "admin" ? (
           <AnalyticsChart
-            data={adminData}
-            title="Total Revenue Overview (Admin)"
+            data={dashboardData}
+            title="Global Revenue Overview"
             color="#f87171"
+          />
+        ) : role === "agent" ? (
+          <AnalyticsChart
+            data={dashboardData}
+            title="Your Delivery Performance"
+            color="#10b981"
           />
         ) : (
           <AnalyticsChart
-            data={customerData}
-            title="Your Spending Analysis (Customer)"
+            data={dashboardData}
+            title="Your Spending Analysis"
             color="#570df8"
           />
         )}
@@ -215,8 +226,8 @@ export default function DashboardPage() {
       <div className="p-8 bg-base-200/50 rounded-[2.5rem] border border-dashed border-base-300">
         <h3 className="font-bold text-lg mb-2">Dashboard Tip:</h3>
         <p className="text-sm opacity-60 leading-relaxed">
-          Hello {user.role}, you can manage your work from the sidebar or using
-          these quick cards. If you have any issues, please contact support.
+          Hello {role}, you can manage your work from the sidebar or using these
+          quick cards. If you have any issues, please contact support.
         </p>
       </div>
     </div>

@@ -30,7 +30,7 @@ const Loading = () => {
         transition={{ delay: 0.5 }}
         className="mt-8 text-xl font-black text-base-content tracking-tighter italic uppercase"
       >
-        SwiftParcel <span className="text-primary">Loading...</span>
+        FastParcel <span className="text-primary">Loading...</span>
       </motion.h2>
       <p className="text-neutral text-sm font-medium mt-2">
         Preparing your experience

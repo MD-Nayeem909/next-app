@@ -1,5 +1,6 @@
 "use client";
 
+import AnalyticsChart from "@/components/dashboard/AnalyticsChart";
 import { useQuery } from "@tanstack/react-query";
 import {
   Truck,
@@ -44,6 +45,31 @@ export default function AgentOverview() {
   const progressPercentage =
     stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0;
 
+  const chartData = (data) => {
+    if (!data) return [];
+    const chartMap = {};
+
+    data.forEach((item) => {
+      if (item.status === "delivered") {
+        const date = new Date(
+          item.updatedAt || item.createdAt
+        ).toLocaleDateString("en-US", {
+          day: "numeric",
+          month: "short",
+        });
+
+        if (!chartMap[date]) {
+          chartMap[date] = { name: date, count: 0 };
+        }
+        chartMap[date].count += 1;
+      }
+    });
+
+    return Object.values(chartMap).sort(
+      (a, b) => new Date(a.name) - new Date(b.name)
+    );
+  };
+
   if (isLoading)
     return (
       <div className="p-10 text-center">
@@ -87,7 +113,7 @@ export default function AgentOverview() {
           </div>
           <div>
             <p className="text-sm font-bold text-neutral uppercase">
-              Delivered
+              Successfully Delivered
             </p>
             <h2 className="text-3xl font-black text-base-content">
               {stats.completed}
@@ -101,14 +127,25 @@ export default function AgentOverview() {
           </div>
           <div>
             <p className="text-sm font-bold opacity-80 uppercase tracking-wide">
-              Efficiency
+              Success Rate
             </p>
-            <h2 className="text-3xl font-black">94%</h2>
+            <h2 className="text-3xl font-black">{progressPercentage}%</h2>
           </div>
         </div>
       </div>
 
       {/* --- Main Content Grid --- */}
+      <div className="space-y-10 animate-in fade-in duration-700">
+        <div className="w-full">
+          <AnalyticsChart
+            data={chartData(parcels)}
+            title="Your Delivery Trend (Completed Tasks)"
+            color="#10b981"
+            dataKey="count"
+          />
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Recent Active Deliveries */}
         <div className="bg-base-100/50 rounded-[2.5rem] p-8 border border-base-300 shadow-sm">
@@ -150,7 +187,7 @@ export default function AgentOverview() {
                   </div>
                   <Link
                     href="/dashboard/agent/my-deliveries"
-                    className="p-2 bg-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                    className="p-2 bg-base-200 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
                   >
                     <ArrowRight size={16} className="text-primary" />
                   </Link>

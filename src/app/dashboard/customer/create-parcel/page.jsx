@@ -70,7 +70,7 @@ export default function CreateParcel() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["parcels"] });
       toast.success("Parcel Created Successfully!");
-      router.push("/dashboard/my-parcels");
+      router.push("/dashboard/customer/my-parcels");
     },
     onError: (error) => toast.error(error.message),
   });

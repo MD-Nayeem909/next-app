@@ -72,7 +72,7 @@ const AddProduct = () => {
           </label>
           <input
             {...register("title", { required: "Title is required" })}
-            className="input input-bordered w-full rounded-xl focus:ring-primary"
+            className="input w-full rounded-xl shadow focus:ring-2 focus:ring-primary/50 outline-none border-2 border-base-300"
             placeholder="e.g. Modern UI Kit"
           />
           {errors.title && (
@@ -89,7 +89,7 @@ const AddProduct = () => {
           </label>
           <select
             {...register("category", { required: "Category is required" })}
-            className="select select-bordered w-full rounded-xl"
+            className="select w-full rounded-xl shadow focus:ring-2 focus:ring-primary/50 outline-none border-2 border-base-300"
           >
             <option value="">Select Category</option>
             <option value="Electronics">Electronics</option>
@@ -108,7 +108,7 @@ const AddProduct = () => {
             type="number"
             min={0}
             {...register("price", { required: "Price is required" })}
-            className="input input-bordered w-full rounded-xl"
+            className="input w-full rounded-xl pr-6 shadow focus:ring-2 focus:ring-primary/50 outline-none border-2 border-base-300"
             placeholder="0.00"
           />
         </div>
@@ -120,7 +120,7 @@ const AddProduct = () => {
           </label>
           <input
             {...register("image", { required: "Image URL is required" })}
-            className="input input-bordered w-full rounded-xl"
+            className="input w-full rounded-xl shadow focus:ring-2 focus:ring-primary/50 outline-none border-2 border-base-300"
             placeholder="https://i.ibb.co/..."
           />
         </div>
@@ -134,7 +134,7 @@ const AddProduct = () => {
             {...register("description", {
               required: "Description is required",
             })}
-            className="textarea textarea-bordered w-full rounded-xl h-32"
+            className="textarea w-full rounded-xl shadow focus:ring-2 focus:ring-primary/50 outline-none border-2 border-base-300 h-32"
             placeholder="Describe your product details..."
           />
         </div>
