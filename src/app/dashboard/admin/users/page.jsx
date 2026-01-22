@@ -3,12 +3,24 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { toast } from "react-hot-toast";
-import { UserCog, ShieldCheck, Truck, User } from "lucide-react";
+import {
+  UserCog,
+  ShieldCheck,
+  Truck,
+  User,
+  Trash2,
+  Ban,
+  CheckCircle,
+} from "lucide-react";
 
 export default function UsersPage() {
   const queryClient = useQueryClient();
 
-  const { data: result, isLoading } = useQuery({
+  const {
+    data: result,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
       const res = await fetch("/api/users");
@@ -37,6 +49,25 @@ export default function UsersPage() {
     },
   });
 
+  const handleBlockUser = async (id, currentStatus) => {
+    const newStatus = currentStatus === "blocked" ? "active" : "blocked";
+    const res = await fetch(`/api/users/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: newStatus }),
+    });
+    const data = await res.json();
+    console.log("Updated User:", data);
+    if (res.ok) refetch();
+  };
+
+  const handleDeleteUser = async (id) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      const res = await fetch(`/api/users/${id}`, { method: "DELETE" });
+      if (res.ok) refetch();
+    }
+  };
+
   if (isLoading)
     return (
       <div className="flex justify-center py-20">
@@ -60,7 +91,8 @@ export default function UsersPage() {
               <th className="py-5 pl-8">User Information</th>
               <th>Current Role</th>
               <th>Joined Date</th>
-              <th className="pr-8 text-right">Actions</th>
+              <th className="pl-8">Actions</th>
+              <th className="pr-8 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -81,12 +113,12 @@ export default function UsersPage() {
                 </td>
                 <td>
                   <span
-                    className={`badge badge-sm font-bold gap-1 py-3 px-4 rounded-lg ${
+                    className={`flex items-center gap-1 text-[10px] font-bold uppercase p-2 rounded-lg transition-all duration-200 flex-1 justify-center ${
                       user.role === "admin"
-                        ? "bg-error/10 text-error border-none"
+                        ? "bg-error/20 text-error border-none"
                         : user.role === "agent"
-                        ? "bg-primary/10 text-primary border-none"
-                        : "bg-base-200 border-none"
+                        ? "bg-warning/20 text-warning border-none"
+                        : "bg-success/20 text-success border-none"
                     }`}
                   >
                     {user.role === "admin" && <ShieldCheck size={12} />}
@@ -115,6 +147,43 @@ export default function UsersPage() {
                     <option value="agent">Agent</option>
                     <option value="admin">Admin</option>
                   </select>
+                </td>
+                <td className="px-6 py-4">
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => handleBlockUser(user._id, user.status)}
+                      className={`p-2 rounded-lg transition-all duration-200 flex-1 hover:scale-110 ${
+                        user.status === "blocked"
+                          ? "bg-success/20 text-success hover:bg-success/30"
+                          : "bg-warning/20 text-warning hover:bg-warning/30"
+                      }`}
+                      title={
+                        user.status === "blocked"
+                          ? "Unblock User"
+                          : "Block User"
+                      }
+                    >
+                      {user.status === "blocked" ? (
+                        <div className="flex items-center gap-1 text-[10px] font-bold uppercase">
+                          <CheckCircle size={16} /> Unblock
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1 text-[10px] font-bold uppercase">
+                          <Ban size={16} /> Block
+                        </div>
+                      )}
+                    </button>
+
+                    <button
+                      onClick={() => handleDeleteUser(user._id)}
+                      className="p-2 bg-error/20 rounded-lg text-error hover:bg-error/30 transition-all duration-200 flex-1 hover:scale-110"
+                      title="Delete User"
+                    >
+                      <div className="flex items-center gap-1 text-[10px] font-bold uppercase">
+                        <Trash2 size={16} /> Delete
+                      </div>
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

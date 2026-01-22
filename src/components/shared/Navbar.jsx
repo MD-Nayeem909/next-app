@@ -61,15 +61,51 @@ const Navbar = () => {
 
   const { data: session } = useSession();
   const user = session?.user;
+  const userRole = session?.user?.role;
 
   const navLinks = [
     { href: "/", text: "Home", public: true },
     { href: "/products", text: "All Products", public: true },
-    { href: "/dashboard/my-products", text: "My Products", public: false },
-    { href: "/dashboard", text: "Dashboard", public: false },
+    {
+      href: "/dashboard/my-products",
+      text: "Add Product",
+      public: false,
+      roles: ["admin", "agent"],
+    },
+    {
+      href: "/dashboard/agent/tasks",
+      text: "My Tasks",
+      public: false,
+      roles: ["agent"],
+    },
+    {
+      href: "/dashboard/customer/my-products",
+      text: "My Purchases",
+      public: false,
+      roles: ["customer"],
+    },
+    {
+      href: "/dashboard/customer/create-parcel",
+      text: "Add Parcel",
+      public: false,
+      roles: ["customer"],
+    },
+    {
+      href: "/dashboard",
+      text: "Dashboard",
+      public: false,
+      roles: ["admin", "agent", "customer"],
+    },
   ];
 
-  const visibleLinks = navLinks.filter((link) => link.public || !!user);
+  const visibleLinks = navLinks.filter((link) => {
+    if (link.public) return true;
+    if (!session) return false;
+    if (link.roles) {
+      return link.roles.includes(userRole);
+    }
+    return true;
+  });
 
   return (
     <motion.header

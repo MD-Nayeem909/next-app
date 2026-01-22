@@ -3,13 +3,15 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
-import { Edit3, Trash2, ExternalLink, Package, Plus } from "lucide-react";
+import { Edit3, Trash2, Package, Plus } from "lucide-react";
 import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 const MyProducts = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   const fetchMyProducts = async () => {
     try {
@@ -30,7 +32,10 @@ const MyProducts = () => {
     if (session?.user?.email) {
       fetchMyProducts();
     }
-  }, [session]);
+    if (status === "authenticated" && session?.user?.role === "customer") {
+      router.push("/");
+    }
+  }, [session, status, router]);
 
   const handleDelete = async (id) => {
     Swal.fire({
@@ -55,6 +60,8 @@ const MyProducts = () => {
       }
     });
   };
+
+  if (session?.user?.role === "customer") return null;
 
   if (loading)
     return (

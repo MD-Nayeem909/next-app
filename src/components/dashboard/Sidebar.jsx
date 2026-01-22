@@ -35,6 +35,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     ],
     agent: [
       { name: "Overview", href: "/dashboard/agent", icon: LayoutDashboard },
+      { name: "Add Product", href: "/dashboard/add-product", icon: PlusCircle },
       { name: "My Products", href: "/dashboard/my-products", icon: Package },
       { name: "My Tasks", href: "/dashboard/agent/tasks", icon: Truck },
       {

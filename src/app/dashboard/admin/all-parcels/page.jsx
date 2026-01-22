@@ -131,7 +131,7 @@ export default function AdminParcelsPage() {
             <input
               type="text"
               placeholder="Search ID or Customer..."
-              className="input input-bordered rounded-2xl pl-10 w-full md:w-64 bg-base-100 border-base-300 shadow-sm"
+              className="input input-bordered pl-10 w-full md:w-64 bg-base-100 border-base-300 rounded-full shadow focus:ring-2 focus:ring-primary/50 outline-none border-2"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -189,12 +189,14 @@ export default function AdminParcelsPage() {
 
                   <td>
                     <select
-                      className={`select select-xs font-bold rounded-sm border-none ${
+                      className={`select select-xs font-bold rounded-sm border-none outline-none ${
                         parcel.status === "delivered"
-                          ? "bg-success text-success-content"
+                          ? "bg-green-100 text-green-600 hover:bg-green-200"
                           : parcel.status === "pending"
-                          ? "bg-warning text-warning-content"
-                          : "bg-info text-info-content"
+                          ? "bg-orange-100 text-orange-600 hover:bg-orange-200"
+                          : parcel.status === "cancelled"
+                          ? "bg-red-100 text-red-600 hover:bg-red-200"
+                          : "bg-blue-100 hover:bg-blue-200 text-blue-600"
                       }`}
                       value={parcel.status}
                       onChange={(e) =>
@@ -213,7 +215,7 @@ export default function AdminParcelsPage() {
                   <td>
                     <div className="flex items-center gap-2">
                       <select
-                        className="select select-bordered select-sm rounded-xl text-xs w-40 focus:ring-2 ring-primary/20"
+                        className="select select-xs font-bold rounded-sm border-none outline-primary/50 focus:ring-2 focus:ring-primary"
                         value={
                           parcel.assignedAgentId?._id ||
                           parcel.assignedAgentId ||

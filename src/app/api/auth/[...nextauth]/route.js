@@ -64,6 +64,13 @@ export const authOptions = {
       }
       return session;
     },
+    async signIn({ user }) {
+      const dbUser = await User.findOne({ email: user.email });
+      if (dbUser?.status === "blocked") {
+        return false;
+      }
+      return true;
+    },
   },
   pages: {
     signIn: "/login",

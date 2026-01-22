@@ -34,3 +34,38 @@ export async function PUT(req, { params }) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+export async function PATCH(req, { params }) {
+  const { id } = await params;
+  const { status } = await req.json();
+
+  try {
+    await dbConnect();
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { $set: { status: status } },
+      { new: true, runValidators: true }
+    );
+    if (!updatedUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+    return NextResponse.json(updatedUser);
+  } catch (error) {
+    console.log("DB Update Error:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(req, { params }) {
+  const { id } = await params;
+  try {
+    await dbConnect();
+    await User.findByIdAndDelete(id);
+    return NextResponse.json({ message: "User deleted successfully" });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to delete user" },
+      { status: 500 }
+    );
+  }
+}
